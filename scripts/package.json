@@ -1,0 +1,11 @@
+{
+  "name": "bicvar-deploy",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "node scripts/deploy.js"
+  },
+  "dependencies": {
+    "starknet": "^8.1.2"
+  }
+}
