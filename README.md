@@ -15,6 +15,37 @@ Deposit → Commit → Reveal → Match → Settle
 3. **Reveal** — Disclose the original parameters. The contract verifies the hash matches and locks funds as escrow
 4. **Match** — Any two revealed orders with overlapping prices can be matched. Settlement is atomic at the midpoint price
 
+## Architecture
+
+```
+┌─────────────────────────────────────────────────┐
+│                   Frontend                       │
+│         Next.js · React · Tailwind               │
+│     starknet-react (Argent X / Braavos)          │
+└────────────────────┬────────────────────────────┘
+                     │ JSON-RPC
+┌────────────────────▼────────────────────────────┐
+│              Starknet Sepolia                    │
+│                                                  │
+│   DarkPool.cairo         MockToken.cairo (×2)    │
+│   ├── deposit/withdraw   ├── ERC20 (BTC)         │
+│   ├── commit_order       └── ERC20 (USDC)        │
+│   ├── reveal_order                               │
+│   ├── match_orders                               │
+│   └── cancel_order                               │
+└──────────────────────────────────────────────────┘
+```
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Smart Contracts | Cairo, Scarb, Starknet |
+| Hashing | Poseidon (ZK-friendly, native to Starknet) |
+| Frontend | Next.js 16, React 19, Tailwind CSS 4, Framer Motion |
+| Wallet | starknet-react (Argent X, Braavos) |
+| Network | Starknet Sepolia testnet |
+
 ## Deployed Contracts (Sepolia)
 
 | Contract | Address |
