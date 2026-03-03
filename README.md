@@ -108,5 +108,3 @@ The commit-reveal pattern ensures:
 MIT
 
 ---
-
-Built for **RE{DEFINE} Hackathon 2026**
