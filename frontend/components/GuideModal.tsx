@@ -2,17 +2,23 @@
 
 import { useState } from "react";
 
+const WALLET_LINKS = {
+  argentX: "https://www.argent.xyz/argent-x/",
+  braavos: "https://braavos.app/",
+};
+
 const guideSteps = [
   {
     step: 1,
     title: "Connect Your Wallet",
     body: [
-      "Install Argent X or Braavos browser extension",
+      "Install a Starknet wallet browser extension (see links below)",
       "Switch your wallet to Starknet Sepolia (testnet)",
       "Click \"Connect Wallet\" in the top-right corner",
       "Approve the connection in your wallet popup",
     ],
     tip: "Don't have Sepolia ETH for gas? Use a Starknet faucet to get free testnet ETH.",
+    walletLinks: true,
   },
   {
     step: 2,
@@ -183,6 +189,43 @@ export function GuideModal() {
                     <span className="text-[var(--accent)] font-bold">TIP: </span>
                     {current.tip}
                   </p>
+                </div>
+              )}
+
+              {/* Wallet download links for step 1 */}
+              {"walletLinks" in current && current.walletLinks && (
+                <div className="mt-4 border border-[var(--border-subtle)] bg-[var(--bg-primary)] p-4 space-y-3">
+                  <p className="text-[9px] font-mono text-[var(--text-muted)] tracking-[0.2em] uppercase">// Download Wallet</p>
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <a
+                      href={WALLET_LINKS.argentX}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 border border-[var(--accent)]/20 hover:border-[var(--accent)]/40 bg-[var(--bg-card)] hover:bg-[var(--accent-light)] transition-all group cursor-pointer"
+                    >
+                      <span className="w-1.5 h-1.5 bg-[var(--accent)] opacity-60" />
+                      <span className="text-[11px] font-mono font-bold text-[var(--text-secondary)] tracking-wider group-hover:text-[var(--accent)] transition-colors">Argent X</span>
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--text-muted)] group-hover:text-[var(--accent)] transition-colors">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                        <polyline points="15 3 21 3 21 9" />
+                        <line x1="10" y1="14" x2="21" y2="3" />
+                      </svg>
+                    </a>
+                    <a
+                      href={WALLET_LINKS.braavos}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 border border-[var(--cyan)]/20 hover:border-[var(--cyan)]/40 bg-[var(--bg-card)] hover:bg-[var(--cyan-light)] transition-all group cursor-pointer"
+                    >
+                      <span className="w-1.5 h-1.5 bg-[var(--cyan)] opacity-60" />
+                      <span className="text-[11px] font-mono font-bold text-[var(--text-secondary)] tracking-wider group-hover:text-[var(--cyan)] transition-colors">Braavos</span>
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--text-muted)] group-hover:text-[var(--cyan)] transition-colors">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                        <polyline points="15 3 21 3 21 9" />
+                        <line x1="10" y1="14" x2="21" y2="3" />
+                      </svg>
+                    </a>
+                  </div>
                 </div>
               )}
             </div>

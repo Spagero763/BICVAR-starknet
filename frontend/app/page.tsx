@@ -44,17 +44,17 @@ export default function Home() {
 
       {/* Navigation */}
       <nav className="sticky top-0 z-50 border-b border-[var(--border-subtle)] bg-[var(--bg-void)]/90 glass">
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-8">
-          <div className="flex items-center justify-between h-[60px]">
-            <div className="flex items-center gap-4 fade-in">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-[56px] sm:h-[60px]">
+            <div className="flex items-center gap-2 sm:gap-4 fade-in">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-[var(--accent)] glow-pulse" />
-                <span className="text-[14px] font-mono font-bold tracking-[0.15em] text-[var(--text-primary)] uppercase">
+                <span className="text-[13px] sm:text-[14px] font-mono font-bold tracking-[0.15em] text-[var(--text-primary)] uppercase">
                   BICVAR
                 </span>
               </div>
-              <div className="h-4 w-px bg-[var(--border-default)]" />
-              <span className="text-[10px] font-mono text-[var(--text-muted)] tracking-[0.2em] uppercase">
+              <div className="hidden sm:block h-4 w-px bg-[var(--border-default)]" />
+              <span className="hidden sm:inline text-[10px] font-mono text-[var(--text-muted)] tracking-[0.2em] uppercase">
                 Dark Pool Protocol
               </span>
             </div>
@@ -72,7 +72,7 @@ export default function Home() {
 
       {/* Boot Sequence / Hero - Only when not connected */}
       {!isConnected && (
-        <section className="max-w-[1400px] mx-auto px-6 lg:px-8 pt-20 pb-16">
+        <section className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-20 pb-10 sm:pb-16">
           {!booted ? (
             <div className="max-w-2xl font-mono space-y-1">
               {bootLines.map((line, i) => (
@@ -96,7 +96,7 @@ export default function Home() {
                 <p className="text-[10px] font-mono text-[var(--text-muted)] tracking-[0.3em] uppercase mb-6 fade-in-up">
                   // PRIVATE TRADING PROTOCOL ON STARKNET
                 </p>
-                <h1 className="text-[38px] md:text-[56px] lg:text-[68px] font-mono font-bold leading-[0.95] tracking-tight text-[var(--text-primary)] mb-2 fade-in-up fade-in-delay-1">
+                <h1 className="text-[28px] sm:text-[38px] md:text-[56px] lg:text-[68px] font-mono font-bold leading-[0.95] tracking-tight text-[var(--text-primary)] mb-2 fade-in-up fade-in-delay-1">
                   TRADE IN
                   <br />
                   <span className="text-[var(--accent)] text-glow">THE DARK</span>
@@ -153,8 +153,8 @@ export default function Home() {
       {/* System Status Bar - When connected */}
       {isConnected && (
         <div className="border-b border-[var(--border-subtle)] bg-[var(--bg-card)]/50 fade-in">
-          <div className="max-w-[1400px] mx-auto px-6 lg:px-8 py-3">
-            <div className="flex items-center gap-6 overflow-x-auto text-[10px] font-mono text-[var(--text-muted)] tracking-wider uppercase">
+          <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <div className="flex items-center gap-4 sm:gap-6 overflow-x-auto text-[10px] font-mono text-[var(--text-muted)] tracking-wider uppercase">
               {[
                 { id: "01", label: "Deposit" },
                 { id: "02", label: "Commit" },
@@ -175,7 +175,7 @@ export default function Home() {
       )}
 
       {/* Main Content */}
-      <main className="max-w-[1400px] mx-auto px-6 lg:px-8 py-8">
+      <main className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           {/* Left Column */}
           <div className="lg:col-span-4 xl:col-span-3 space-y-4">
@@ -193,15 +193,15 @@ export default function Home() {
       <GuideModal />
 
       {/* Footer */}
-      <footer className="border-t border-[var(--border-subtle)] mt-16">
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-8 py-6">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+      <footer className="border-t border-[var(--border-subtle)] mt-8 sm:mt-16">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
             <div className="flex items-center gap-3">
               <div className="w-1.5 h-1.5 bg-[var(--accent)] opacity-40" />
               <span className="text-[11px] font-mono font-bold text-[var(--text-secondary)] tracking-[0.1em] uppercase">BICVAR</span>
               <span className="text-[10px] font-mono text-[var(--text-muted)]">// Private Dark Pool Protocol</span>
             </div>
-            <div className="flex items-center gap-4 text-[10px] font-mono text-[var(--text-muted)] tracking-wider uppercase">
+            <div className="flex items-center gap-3 sm:gap-4 text-[9px] sm:text-[10px] font-mono text-[var(--text-muted)] tracking-wider uppercase">
               <span className="transition-colors duration-300 hover:text-[var(--accent)] cursor-default">Starknet</span>
               <span className="opacity-20">|</span>
               <span className="transition-colors duration-300 hover:text-[var(--accent)] cursor-default">Poseidon</span>

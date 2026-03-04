@@ -303,11 +303,11 @@ export function OrderBook() {
       {(revealedBuys.length > 0 || revealedSells.length > 0) && (
         <div className="px-5 py-3 border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)]">
           <p className="text-[9px] font-mono text-[var(--accent)] tracking-[0.2em] uppercase mb-3 opacity-60">// Match Engine</p>
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2">
             <select
               value={selectedBuyId ?? ""}
               onChange={(e) => setSelectedBuyId(e.target.value ? Number(e.target.value) : null)}
-              className="bg-[var(--bg-card)] border border-[var(--border-subtle)] px-3 py-2 text-[10px] font-mono text-[var(--accent)] focus:outline-none focus:border-[var(--accent)]/30 min-w-[140px] cursor-pointer"
+              className="bg-[var(--bg-card)] border border-[var(--border-subtle)] px-3 py-2 text-[10px] font-mono text-[var(--accent)] focus:outline-none focus:border-[var(--accent)]/30 w-full sm:min-w-[140px] sm:w-auto cursor-pointer"
             >
               <option value="">Buy order</option>
               {revealedBuys.map((o) => (
@@ -317,12 +317,12 @@ export function OrderBook() {
               ))}
             </select>
 
-            <span className="text-[var(--text-muted)] text-[10px] font-mono">×</span>
+            <span className="text-[var(--text-muted)] text-[10px] font-mono hidden sm:inline">×</span>
 
             <select
               value={selectedSellId ?? ""}
               onChange={(e) => setSelectedSellId(e.target.value ? Number(e.target.value) : null)}
-              className="bg-[var(--bg-card)] border border-[var(--border-subtle)] px-3 py-2 text-[10px] font-mono text-[var(--sell)] focus:outline-none focus:border-[var(--accent)]/30 min-w-[140px] cursor-pointer"
+              className="bg-[var(--bg-card)] border border-[var(--border-subtle)] px-3 py-2 text-[10px] font-mono text-[var(--sell)] focus:outline-none focus:border-[var(--accent)]/30 w-full sm:min-w-[140px] sm:w-auto cursor-pointer"
             >
               <option value="">Sell order</option>
               {revealedSells.map((o) => (
@@ -368,8 +368,8 @@ export function OrderBook() {
         </div>
       ) : (
         <div>
-          {/* Table Header */}
-          <div className="grid grid-cols-[45px_1fr_90px_1fr_auto] gap-3 px-5 py-2.5 text-[9px] font-mono font-bold text-[var(--text-muted)] uppercase tracking-[0.2em] border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)]">
+          {/* Desktop Table Header - hidden on mobile */}
+          <div className="hidden md:grid grid-cols-[45px_1fr_90px_1fr_auto] gap-3 px-5 py-2.5 text-[9px] font-mono font-bold text-[var(--text-muted)] uppercase tracking-[0.2em] border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)]">
             <span>ID</span>
             <span>Hash</span>
             <span>Status</span>
@@ -377,69 +377,127 @@ export function OrderBook() {
             <span className="text-right">Actions</span>
           </div>
 
-          {/* Orders */}
+          {/* Orders - Desktop row / Mobile card */}
           {orders.map((order, idx) => (
             <div
               key={order.orderId}
-              className={`grid grid-cols-[45px_1fr_90px_1fr_auto] gap-3 items-center px-5 py-3 border-b border-[var(--border-subtle)] order-row row-reveal stagger-${Math.min(idx + 1, 8)} ${
+              className={`border-b border-[var(--border-subtle)] order-row row-reveal stagger-${Math.min(idx + 1, 8)} ${
                 isMyOrder(order.trader)
                   ? "bg-[var(--accent-light)]/40 border-l-2 border-l-[var(--accent)]/20"
                   : ""
               }`}
             >
-              <span className="font-mono text-[11px] text-[var(--text-muted)]">#{order.orderId}</span>
-
-              <span className="font-mono text-[10px] text-[var(--text-muted)] truncate opacity-60" title={order.hash}>
-                {order.hash.slice(0, 14)}...
-              </span>
-
-              <StatusBadge status={order.status} />
-
-              <span className="text-[11px] font-mono">
-                {order.localData ? (
-                  <span className="flex items-center gap-2">
-                    <span className={`font-bold tracking-[0.1em] ${order.localData.side === SIDE_BUY ? "text-[var(--accent)]" : "text-[var(--sell)]"}`}>
-                      {order.localData.side === SIDE_BUY ? "BUY" : "SELL"}
-                    </span>
-                    <span className="text-[var(--text-secondary)]">
-                      {formatAmount(order.localData.amount)} @ {order.localData.price}
-                    </span>
-                  </span>
-                ) : (
-                  <span className="text-[var(--text-muted)] italic opacity-50">
-                    {isMyOrder(order.trader) ? "// Your order" : "// Encrypted"}
-                  </span>
-                )}
-              </span>
-
-              <div className="flex gap-1.5 justify-end">
-                {isMyOrder(order.trader) && order.status === STATUS_OPEN && order.localData && (
-                  <div className="flex flex-col items-end gap-1">
-                    <button
-                      onClick={() => handleReveal(order)}
-                      disabled={revealingId === order.orderId}
-                      className="px-3 py-1 text-[9px] font-mono font-bold tracking-[0.1em] uppercase bg-[var(--accent)] text-[#000] hover:bg-[var(--accent-hover)] btn-terminal disabled:opacity-30 cursor-pointer"
-                    >
-                      {revealingId === order.orderId ? "..." : "Reveal"}
-                    </button>
-                    {revealStatus?.orderId === order.orderId && (
-                      <span className={`text-[9px] font-mono max-w-[200px] text-right leading-tight ${
-                        revealStatus.isError ? "text-[var(--sell)]" : "text-[var(--accent)]"
-                      }`}>
-                        {revealStatus.message}
+              {/* Desktop layout */}
+              <div className="hidden md:grid grid-cols-[45px_1fr_90px_1fr_auto] gap-3 items-center px-5 py-3">
+                <span className="font-mono text-[11px] text-[var(--text-muted)]">#{order.orderId}</span>
+                <span className="font-mono text-[10px] text-[var(--text-muted)] truncate opacity-60" title={order.hash}>
+                  {order.hash.slice(0, 14)}...
+                </span>
+                <StatusBadge status={order.status} />
+                <span className="text-[11px] font-mono">
+                  {order.localData ? (
+                    <span className="flex items-center gap-2">
+                      <span className={`font-bold tracking-[0.1em] ${order.localData.side === SIDE_BUY ? "text-[var(--accent)]" : "text-[var(--sell)]"}`}>
+                        {order.localData.side === SIDE_BUY ? "BUY" : "SELL"}
                       </span>
+                      <span className="text-[var(--text-secondary)]">
+                        {formatAmount(order.localData.amount)} @ {order.localData.price}
+                      </span>
+                    </span>
+                  ) : (
+                    <span className="text-[var(--text-muted)] italic opacity-50">
+                      {isMyOrder(order.trader) ? "// Your order" : "// Encrypted"}
+                    </span>
+                  )}
+                </span>
+                <div className="flex gap-1.5 justify-end">
+                  {isMyOrder(order.trader) && order.status === STATUS_OPEN && order.localData && (
+                    <div className="flex flex-col items-end gap-1">
+                      <button
+                        onClick={() => handleReveal(order)}
+                        disabled={revealingId === order.orderId}
+                        className="px-3 py-1 text-[9px] font-mono font-bold tracking-[0.1em] uppercase bg-[var(--accent)] text-[#000] hover:bg-[var(--accent-hover)] btn-terminal disabled:opacity-30 cursor-pointer"
+                      >
+                        {revealingId === order.orderId ? "..." : "Reveal"}
+                      </button>
+                      {revealStatus?.orderId === order.orderId && (
+                        <span className={`text-[9px] font-mono max-w-[200px] text-right leading-tight ${
+                          revealStatus.isError ? "text-[var(--sell)]" : "text-[var(--accent)]"
+                        }`}>
+                          {revealStatus.message}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                  {isMyOrder(order.trader) &&
+                    (order.status === STATUS_OPEN || order.status === STATUS_REVEALED) && (
+                      <button
+                        onClick={() => handleCancel(order.orderId)}
+                        className="px-3 py-1 text-[9px] font-mono font-bold tracking-[0.1em] uppercase border border-[var(--border-default)] text-[var(--text-muted)] hover:text-[var(--sell)] hover:border-[var(--sell)]/20 btn-terminal cursor-pointer"
+                      >
+                        Cancel
+                      </button>
+                    )}
+                </div>
+              </div>
+
+              {/* Mobile card layout */}
+              <div className="md:hidden px-4 py-3 space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-[11px] text-[var(--text-muted)]">#{order.orderId}</span>
+                    <StatusBadge status={order.status} />
+                  </div>
+                  <span className="font-mono text-[9px] text-[var(--text-muted)] opacity-60" title={order.hash}>
+                    {order.hash.slice(0, 10)}...
+                  </span>
+                </div>
+                <div className="text-[11px] font-mono">
+                  {order.localData ? (
+                    <span className="flex items-center gap-2">
+                      <span className={`font-bold tracking-[0.1em] ${order.localData.side === SIDE_BUY ? "text-[var(--accent)]" : "text-[var(--sell)]"}`}>
+                        {order.localData.side === SIDE_BUY ? "BUY" : "SELL"}
+                      </span>
+                      <span className="text-[var(--text-secondary)]">
+                        {formatAmount(order.localData.amount)} @ {order.localData.price}
+                      </span>
+                    </span>
+                  ) : (
+                    <span className="text-[var(--text-muted)] italic opacity-50">
+                      {isMyOrder(order.trader) ? "// Your order" : "// Encrypted"}
+                    </span>
+                  )}
+                </div>
+                {isMyOrder(order.trader) && (
+                  <div className="flex gap-2 pt-1">
+                    {order.status === STATUS_OPEN && order.localData && (
+                      <div className="flex flex-col gap-1">
+                        <button
+                          onClick={() => handleReveal(order)}
+                          disabled={revealingId === order.orderId}
+                          className="px-3 py-1.5 text-[9px] font-mono font-bold tracking-[0.1em] uppercase bg-[var(--accent)] text-[#000] hover:bg-[var(--accent-hover)] btn-terminal disabled:opacity-30 cursor-pointer"
+                        >
+                          {revealingId === order.orderId ? "..." : "Reveal"}
+                        </button>
+                        {revealStatus?.orderId === order.orderId && (
+                          <span className={`text-[9px] font-mono leading-tight ${
+                            revealStatus.isError ? "text-[var(--sell)]" : "text-[var(--accent)]"
+                          }`}>
+                            {revealStatus.message}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                    {(order.status === STATUS_OPEN || order.status === STATUS_REVEALED) && (
+                      <button
+                        onClick={() => handleCancel(order.orderId)}
+                        className="px-3 py-1.5 text-[9px] font-mono font-bold tracking-[0.1em] uppercase border border-[var(--border-default)] text-[var(--text-muted)] hover:text-[var(--sell)] hover:border-[var(--sell)]/20 btn-terminal cursor-pointer"
+                      >
+                        Cancel
+                      </button>
                     )}
                   </div>
                 )}
-                {isMyOrder(order.trader) &&
-                  (order.status === STATUS_OPEN || order.status === STATUS_REVEALED) && (
-                    <button
-                      onClick={() => handleCancel(order.orderId)}
-                      className="px-3 py-1 text-[9px] font-mono font-bold tracking-[0.1em] uppercase border border-[var(--border-default)] text-[var(--text-muted)] hover:text-[var(--sell)] hover:border-[var(--sell)]/20 btn-terminal cursor-pointer"
-                    >
-                      Cancel
-                    </button>
-                  )}
               </div>
             </div>
           ))}

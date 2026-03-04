@@ -56,16 +56,40 @@ export function WalletBar() {
   }
 
   return (
-    <div className="flex gap-2">
-      {connectors.map((connector) => (
-        <button
-          key={connector.id}
-          onClick={() => connect({ connector })}
-          className="px-5 py-2 text-[11px] font-mono font-bold tracking-[0.1em] uppercase bg-[var(--accent)] text-[#000] hover:bg-[var(--accent-hover)] btn-terminal cursor-pointer"
-        >
-          {connector.name}
-        </button>
-      ))}
+    <div className="flex flex-col items-end gap-2">
+      <div className="flex gap-2">
+        {connectors.length > 0 ? (
+          connectors.map((connector) => (
+            <button
+              key={connector.id}
+              onClick={() => connect({ connector })}
+              className="px-4 sm:px-5 py-2 text-[10px] sm:text-[11px] font-mono font-bold tracking-[0.1em] uppercase bg-[var(--accent)] text-[#000] hover:bg-[var(--accent-hover)] btn-terminal cursor-pointer"
+            >
+              {connector.name}
+            </button>
+          ))
+        ) : (
+          <div className="flex items-center gap-2">
+            <span className="text-[9px] font-mono text-[var(--text-muted)] tracking-wider uppercase hidden sm:inline">No wallet?</span>
+            <a
+              href="https://www.argent.xyz/argent-x/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3 py-1.5 text-[9px] sm:text-[10px] font-mono font-bold tracking-[0.1em] uppercase border border-[var(--accent)]/30 text-[var(--accent)] hover:bg-[var(--accent-light)] transition-all cursor-pointer"
+            >
+              Argent X
+            </a>
+            <a
+              href="https://braavos.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3 py-1.5 text-[9px] sm:text-[10px] font-mono font-bold tracking-[0.1em] uppercase border border-[var(--cyan)]/30 text-[var(--cyan)] hover:bg-[var(--cyan-light)] transition-all cursor-pointer"
+            >
+              Braavos
+            </a>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
