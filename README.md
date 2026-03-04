@@ -94,47 +94,6 @@ After your trade settles:
 - Enter the amount you want to withdraw
 - Click **Withdraw** to move tokens back to your wallet
 
-## Architecture
-
-```
-┌─────────────────────────────────────────────────┐
-│                   Frontend                       │
-│         Next.js · React · Tailwind               │
-│     starknet-react (Argent X / Braavos)          │
-└────────────────────┬────────────────────────────┘
-                     │ JSON-RPC
-┌────────────────────▼────────────────────────────┐
-│              Starknet Sepolia                    │
-│                                                  │
-│   DarkPool.cairo         MockToken.cairo (×2)    │
-│   ├── deposit/withdraw   ├── ERC20 (BTC)         │
-│   ├── commit_order       └── ERC20 (USDC)        │
-│   ├── reveal_order                               │
-│   ├── match_orders                               │
-│   └── cancel_order                               │
-└──────────────────────────────────────────────────┘
-```
-
-## Tech Stack
-
-| Layer | Technology |
-|-------|-----------|
-| Smart Contracts | Cairo, Scarb, Starknet |
-| Hashing | Poseidon (ZK-friendly, native to Starknet) |
-| Frontend | Next.js 16, React 19, Tailwind CSS 4, Framer Motion |
-| Wallet | starknet-react (Argent X, Braavos) |
-| Network | Starknet Sepolia testnet |
-
-## Deployed Contracts (Sepolia)
-
-| Contract | Address |
-|----------|---------|
-| DarkPool | `0x5e70bdb135537663bcddded8a9f4805c65fa451ce7d00a455f1d828f8d11814` |
-| Mock BTC | `0x42769d67da8bb4ea209659fe987b525b7fd4564abad6303c6bdb7240ad506e` |
-| Mock USDC | `0x4d254088994a5278bc7f436e3d00bfd5a8e5a114f14abe2a303d9de618d3088` |
-
-```
-
 ## Privacy Model
 
 The commit-reveal pattern ensures:
@@ -149,5 +108,3 @@ The commit-reveal pattern ensures:
 MIT
 
 ---
-
-Built for **RE{DEFINE} Hackathon 2026**
