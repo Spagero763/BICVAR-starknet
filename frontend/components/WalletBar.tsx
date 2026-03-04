@@ -38,12 +38,12 @@ function WalletNotFoundModal({ walletKey, onClose }: { walletKey: string | null;
   const wallet = walletKey === "braavos" ? WALLET_INFO.braavos : WALLET_INFO.argentX;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div className="absolute inset-0 bg-black/80 glass backdrop-in" onClick={onClose} />
 
-      <div className="relative w-full max-w-sm border border-[var(--border-default)] bg-[var(--bg-card)] shadow-2xl shadow-black/60 modal-in overflow-hidden">
+      <div className="relative w-full sm:max-w-sm max-h-[85vh] border border-[var(--border-default)] bg-[var(--bg-card)] shadow-2xl shadow-black/60 modal-in overflow-y-auto rounded-t-lg sm:rounded-t-none">
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)]">
+        <div className="sticky top-0 z-10 flex items-center justify-between px-4 sm:px-5 py-3 border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)]">
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 bg-[var(--warning)]" />
             <p className="text-[10px] font-mono font-bold text-[var(--text-primary)] tracking-[0.15em] uppercase">Wallet Not Detected</p>
@@ -60,7 +60,7 @@ function WalletNotFoundModal({ walletKey, onClose }: { walletKey: string | null;
         </div>
 
         {/* Body */}
-        <div className="px-5 py-5 space-y-4">
+        <div className="px-4 sm:px-5 py-4 sm:py-5 space-y-3 sm:space-y-4">
           <p className="text-[11px] font-mono text-[var(--text-secondary)] leading-relaxed">
             <span className="font-bold" style={{ color: wallet.color }}>{wallet.name}</span> wallet was not found{isMobile ? " on your device" : " in your browser"}. Install it to connect to BICVAR.
           </p>
