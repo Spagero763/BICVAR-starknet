@@ -41,16 +41,16 @@ function formatAmount(raw: string, decimals = 18): string {
 }
 
 function StatusBadge({ status }: { status: number }) {
-  const config: Record<number, { bg: string; text: string }> = {
-    [STATUS_OPEN]: { bg: "bg-amber-400/10", text: "text-amber-400" },
-    [STATUS_REVEALED]: { bg: "bg-[var(--accent-light)]", text: "text-[var(--accent)]" },
-    [STATUS_FILLED]: { bg: "bg-emerald-400/10", text: "text-emerald-400" },
-    [STATUS_CANCELLED]: { bg: "bg-neutral-400/10", text: "text-neutral-500" },
+  const config: Record<number, { color: string }> = {
+    [STATUS_OPEN]: { color: "text-amber-400" },
+    [STATUS_REVEALED]: { color: "text-[var(--cyan)]" },
+    [STATUS_FILLED]: { color: "text-[var(--accent)]" },
+    [STATUS_CANCELLED]: { color: "text-neutral-600" },
   };
-  const c = config[status] || { bg: "bg-neutral-400/10", text: "text-neutral-500" };
+  const c = config[status] || { color: "text-neutral-600" };
   return (
-    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium ${c.bg} ${c.text} transition-all duration-300`}>
-      <span className={`w-1.5 h-1.5 rounded-full bg-current ${status === STATUS_OPEN || status === STATUS_REVEALED ? 'status-live' : ''}`} />
+    <span className={`inline-flex items-center gap-1.5 text-[10px] font-mono font-bold tracking-wider uppercase ${c.color}`}>
+      <span className={`w-1 h-1 bg-current ${status === STATUS_OPEN || status === STATUS_REVEALED ? 'status-live' : ''}`} />
       {STATUS_LABELS[status] || "Unknown"}
     </span>
   );
@@ -285,15 +285,15 @@ export function OrderBook() {
   return (
     <div className="card overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-5 border-b border-[var(--border-subtle)]">
-        <div>
-          <h2 className="text-[15px] font-semibold text-[var(--text-primary)]">Order Book</h2>
-          <p className="text-[12px] text-[var(--text-muted)] mt-0.5">{orders.length} orders</p>
+      <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--border-subtle)]">
+        <div className="flex items-center gap-3">
+          <p className="text-[9px] font-mono text-[var(--text-muted)] tracking-[0.2em] uppercase">// Order Book</p>
+          <span className="text-[9px] font-mono text-[var(--text-muted)]">[{orders.length}]</span>
         </div>
         <button
           onClick={loadOrders}
           disabled={isLoading}
-          className="px-4 py-2 text-[12px] font-medium rounded-lg border border-[var(--border-default)] text-[var(--text-muted)] hover:text-[var(--text-secondary)] hover:border-[var(--border-active)] transition-all cursor-pointer disabled:opacity-40"
+          className="px-3 py-1.5 text-[9px] font-mono tracking-[0.15em] uppercase border border-[var(--border-subtle)] text-[var(--text-muted)] hover:text-[var(--accent)] hover:border-[var(--accent)]/15 transition-all cursor-pointer disabled:opacity-30"
         >
           {isLoading ? "Syncing..." : "Refresh"}
         </button>
@@ -301,15 +301,15 @@ export function OrderBook() {
 
       {/* Match Section */}
       {(revealedBuys.length > 0 || revealedSells.length > 0) && (
-        <div className="px-6 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)]">
-          <p className="text-[11px] font-medium text-[var(--text-muted)] uppercase tracking-wider mb-3">Match Orders</p>
-          <div className="flex flex-wrap items-center gap-3">
+        <div className="px-5 py-3 border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)]">
+          <p className="text-[9px] font-mono text-[var(--accent)] tracking-[0.2em] uppercase mb-3 opacity-60">// Match Engine</p>
+          <div className="flex flex-wrap items-center gap-2">
             <select
               value={selectedBuyId ?? ""}
               onChange={(e) => setSelectedBuyId(e.target.value ? Number(e.target.value) : null)}
-              className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-[12px] font-mono text-emerald-400 focus:outline-none focus:border-[var(--accent)] min-w-[140px] cursor-pointer"
+              className="bg-[var(--bg-card)] border border-[var(--border-subtle)] px-3 py-2 text-[10px] font-mono text-[var(--accent)] focus:outline-none focus:border-[var(--accent)]/30 min-w-[140px] cursor-pointer"
             >
-              <option value="">Select buy order</option>
+              <option value="">Buy order</option>
               {revealedBuys.map((o) => (
                 <option key={o.orderId} value={o.orderId}>
                   #{o.orderId} — {o.localData ? `${formatAmount(o.localData.amount)} @ ${o.localData.price}` : o.hash.slice(0, 10)}
@@ -317,14 +317,14 @@ export function OrderBook() {
               ))}
             </select>
 
-            <span className="text-[var(--text-muted)] text-[12px]">with</span>
+            <span className="text-[var(--text-muted)] text-[10px] font-mono">×</span>
 
             <select
               value={selectedSellId ?? ""}
               onChange={(e) => setSelectedSellId(e.target.value ? Number(e.target.value) : null)}
-              className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-[12px] font-mono text-red-400 focus:outline-none focus:border-[var(--accent)] min-w-[140px] cursor-pointer"
+              className="bg-[var(--bg-card)] border border-[var(--border-subtle)] px-3 py-2 text-[10px] font-mono text-[var(--sell)] focus:outline-none focus:border-[var(--accent)]/30 min-w-[140px] cursor-pointer"
             >
-              <option value="">Select sell order</option>
+              <option value="">Sell order</option>
               {revealedSells.map((o) => (
                 <option key={o.orderId} value={o.orderId}>
                   #{o.orderId} — {o.localData ? `${formatAmount(o.localData.amount)} @ ${o.localData.price}` : o.hash.slice(0, 10)}
@@ -335,18 +335,18 @@ export function OrderBook() {
             <button
               onClick={handleMatch}
               disabled={!canMatch}
-              className={`px-5 py-2 text-[12px] font-semibold rounded-lg btn-lift cursor-pointer ${
+              className={`px-4 py-2 text-[10px] font-mono font-bold tracking-[0.1em] uppercase btn-terminal cursor-pointer ${
                 canMatch
-                  ? "bg-[var(--accent)] text-[#0a0a0a] hover:bg-[var(--accent-hover)]"
-                  : "bg-[var(--bg-elevated)] text-[var(--text-muted)] opacity-50 cursor-not-allowed"
+                  ? "bg-[var(--accent)] text-[#000] hover:bg-[var(--accent-hover)]"
+                  : "bg-[var(--bg-elevated)] text-[var(--text-muted)] opacity-40 cursor-not-allowed"
               }`}
             >
-              {isMatching ? "Matching..." : "Match Orders"}
+              {isMatching ? "Matching..." : "Execute Match"}
             </button>
           </div>
 
           {matchStatus && (
-            <p className={`mt-3 text-[12px] font-medium ${matchStatus.isError ? "text-red-400" : "text-emerald-400"}`}>
+            <p className={`mt-2 text-[10px] font-mono ${matchStatus.isError ? "text-[var(--sell)]" : "text-[var(--accent)]"}`}>
               {matchStatus.message}
             </p>
           )}
@@ -355,21 +355,21 @@ export function OrderBook() {
 
       {/* Empty State */}
       {orders.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 gap-4 fade-in">
-          <div className="w-12 h-12 rounded-2xl bg-[var(--bg-elevated)] flex items-center justify-center float">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-[var(--text-muted)]">
+        <div className="flex flex-col items-center justify-center py-16 gap-3 fade-in">
+          <div className="w-8 h-8 border border-[var(--border-default)] flex items-center justify-center float">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-[var(--text-muted)]">
               <path d="M9 5H2v7l6.29 6.29c.94.94 2.48.94 3.42 0l4.58-4.58c.94-.94.94-2.48 0-3.42L9 5z" />
               <circle cx="6" cy="9" r="1" fill="currentColor" />
             </svg>
           </div>
-          <p className="text-[14px] text-[var(--text-muted)]">
-            {DARKPOOL_ADDRESS === "0x0" ? "Contract not deployed" : "No orders yet"}
+          <p className="text-[11px] font-mono text-[var(--text-muted)] tracking-wider">
+            {DARKPOOL_ADDRESS === "0x0" ? "// Contract not deployed" : "// No orders found"}
           </p>
         </div>
       ) : (
         <div>
           {/* Table Header */}
-          <div className="grid grid-cols-[50px_1fr_100px_1fr_auto] gap-4 px-6 py-3 text-[11px] font-medium text-[var(--text-muted)] uppercase tracking-wider border-b border-[var(--border-subtle)]">
+          <div className="grid grid-cols-[45px_1fr_90px_1fr_auto] gap-3 px-5 py-2.5 text-[9px] font-mono font-bold text-[var(--text-muted)] uppercase tracking-[0.2em] border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)]">
             <span>ID</span>
             <span>Hash</span>
             <span>Status</span>
@@ -381,50 +381,50 @@ export function OrderBook() {
           {orders.map((order, idx) => (
             <div
               key={order.orderId}
-              className={`grid grid-cols-[50px_1fr_100px_1fr_auto] gap-4 items-center px-6 py-4 border-b border-[var(--border-subtle)] order-row row-reveal stagger-${Math.min(idx + 1, 8)} ${
+              className={`grid grid-cols-[45px_1fr_90px_1fr_auto] gap-3 items-center px-5 py-3 border-b border-[var(--border-subtle)] order-row row-reveal stagger-${Math.min(idx + 1, 8)} ${
                 isMyOrder(order.trader)
-                  ? "bg-[var(--accent-light)]/30"
-                  : "hover:bg-[var(--bg-secondary)]"
+                  ? "bg-[var(--accent-light)]/40 border-l-2 border-l-[var(--accent)]/20"
+                  : ""
               }`}
             >
-              <span className="font-mono text-[13px] text-[var(--text-muted)]">{order.orderId}</span>
+              <span className="font-mono text-[11px] text-[var(--text-muted)]">#{order.orderId}</span>
 
-              <span className="font-mono text-[12px] text-[var(--text-muted)] truncate" title={order.hash}>
-                {order.hash.slice(0, 12)}...
+              <span className="font-mono text-[10px] text-[var(--text-muted)] truncate opacity-60" title={order.hash}>
+                {order.hash.slice(0, 14)}...
               </span>
 
               <StatusBadge status={order.status} />
 
-              <span className="text-[13px]">
+              <span className="text-[11px] font-mono">
                 {order.localData ? (
                   <span className="flex items-center gap-2">
-                    <span className={`font-semibold ${order.localData.side === SIDE_BUY ? "text-emerald-400" : "text-red-400"}`}>
+                    <span className={`font-bold tracking-[0.1em] ${order.localData.side === SIDE_BUY ? "text-[var(--accent)]" : "text-[var(--sell)]"}`}>
                       {order.localData.side === SIDE_BUY ? "BUY" : "SELL"}
                     </span>
-                    <span className="text-[var(--text-secondary)] font-mono">
+                    <span className="text-[var(--text-secondary)]">
                       {formatAmount(order.localData.amount)} @ {order.localData.price}
                     </span>
                   </span>
                 ) : (
-                  <span className="text-[var(--text-muted)] italic">
-                    {isMyOrder(order.trader) ? "Your order" : "Hidden"}
+                  <span className="text-[var(--text-muted)] italic opacity-50">
+                    {isMyOrder(order.trader) ? "// Your order" : "// Encrypted"}
                   </span>
                 )}
               </span>
 
-              <div className="flex gap-2 justify-end">
+              <div className="flex gap-1.5 justify-end">
                 {isMyOrder(order.trader) && order.status === STATUS_OPEN && order.localData && (
                   <div className="flex flex-col items-end gap-1">
                     <button
                       onClick={() => handleReveal(order)}
                       disabled={revealingId === order.orderId}
-                      className="px-3 py-1.5 text-[11px] font-medium bg-[var(--accent)] text-[#0a0a0a] rounded-lg hover:bg-[var(--accent-hover)] btn-lift disabled:opacity-40 cursor-pointer"
+                      className="px-3 py-1 text-[9px] font-mono font-bold tracking-[0.1em] uppercase bg-[var(--accent)] text-[#000] hover:bg-[var(--accent-hover)] btn-terminal disabled:opacity-30 cursor-pointer"
                     >
-                      {revealingId === order.orderId ? "Revealing..." : "Reveal"}
+                      {revealingId === order.orderId ? "..." : "Reveal"}
                     </button>
                     {revealStatus?.orderId === order.orderId && (
-                      <span className={`text-[10px] max-w-[200px] text-right leading-tight ${
-                        revealStatus.isError ? "text-red-400" : "text-emerald-400"
+                      <span className={`text-[9px] font-mono max-w-[200px] text-right leading-tight ${
+                        revealStatus.isError ? "text-[var(--sell)]" : "text-[var(--accent)]"
                       }`}>
                         {revealStatus.message}
                       </span>
@@ -435,7 +435,7 @@ export function OrderBook() {
                   (order.status === STATUS_OPEN || order.status === STATUS_REVEALED) && (
                     <button
                       onClick={() => handleCancel(order.orderId)}
-                      className="px-3 py-1.5 text-[11px] font-medium border border-[var(--border-default)] text-[var(--text-muted)] hover:text-red-400 hover:border-red-400/30 rounded-lg btn-lift cursor-pointer"
+                      className="px-3 py-1 text-[9px] font-mono font-bold tracking-[0.1em] uppercase border border-[var(--border-default)] text-[var(--text-muted)] hover:text-[var(--sell)] hover:border-[var(--sell)]/20 btn-terminal cursor-pointer"
                     >
                       Cancel
                     </button>

@@ -94,13 +94,9 @@ export function GuideModal() {
       {/* Floating Guide Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--accent)] text-[#0a0a0a] text-[13px] font-semibold shadow-lg shadow-[var(--accent)]/15 hover:shadow-[var(--accent)]/30 btn-lift cursor-pointer fade-in-up fade-in-delay-5"
+        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-2 border border-[var(--accent)]/20 bg-[var(--bg-card)] text-[var(--accent)] text-[10px] font-mono font-bold tracking-[0.15em] uppercase hover:border-[var(--accent)]/40 hover:bg-[var(--bg-elevated)] btn-terminal cursor-pointer terminal-in fade-in-delay-5"
       >
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-          <circle cx="12" cy="12" r="10" />
-          <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" />
-          <path d="M12 17h.01" />
-        </svg>
+        <span className="w-1.5 h-1.5 bg-[var(--accent)] glow-pulse" />
         Guide
       </button>
 
@@ -109,23 +105,24 @@ export function GuideModal() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           {/* Backdrop */}
           <div
-            className="absolute inset-0 bg-black/70 glass backdrop-in"
+            className="absolute inset-0 bg-black/80 glass backdrop-in"
             onClick={() => setIsOpen(false)}
           />
 
           {/* Modal Content */}
-          <div className="relative w-full max-w-2xl max-h-[85vh] overflow-hidden rounded-2xl border border-[var(--border-default)] bg-[var(--bg-secondary)] shadow-2xl modal-in">
+          <div className="relative w-full max-w-2xl max-h-[85vh] overflow-hidden border border-[var(--border-default)] bg-[var(--bg-card)] shadow-2xl shadow-black/60 modal-in">
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-5 border-b border-[var(--border-subtle)]">
-              <div>
-                <h2 className="text-[17px] font-semibold text-[var(--text-primary)]">Getting Started</h2>
-                <p className="text-[12px] text-[var(--text-muted)] mt-0.5">Step {activeStep + 1} of {guideSteps.length}</p>
+            <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)]">
+              <div className="flex items-center gap-3">
+                <div className="w-1.5 h-1.5 bg-[var(--accent)]" />
+                <p className="text-[10px] font-mono font-bold text-[var(--text-primary)] tracking-[0.15em] uppercase">Getting Started</p>
+                <span className="text-[9px] font-mono text-[var(--text-muted)]">[{activeStep + 1}/{guideSteps.length}]</span>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
-                className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-[var(--bg-elevated)] transition-colors text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
+                className="w-6 h-6 flex items-center justify-center hover:bg-[var(--bg-elevated)] transition-colors text-[var(--text-muted)] hover:text-[var(--sell)] cursor-pointer"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                   <path d="M18 6L6 18" />
                   <path d="M6 6l12 12" />
                 </svg>
@@ -133,65 +130,57 @@ export function GuideModal() {
             </div>
 
             {/* Step Navigation */}
-            <div className="px-6 py-3 border-b border-[var(--border-subtle)] overflow-x-auto">
-              <div className="flex gap-1">
+            <div className="px-5 py-2 border-b border-[var(--border-subtle)] overflow-x-auto">
+              <div className="flex gap-0.5">
                 {guideSteps.map((s, i) => (
                   <button
                     key={i}
                     onClick={() => setActiveStep(i)}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-medium transition-all shrink-0 cursor-pointer ${
+                    className={`flex items-center gap-1.5 px-2.5 py-1 text-[9px] font-mono font-bold tracking-wider transition-all shrink-0 cursor-pointer ${
                       i === activeStep
-                        ? "bg-[var(--accent-light)] text-[var(--accent)] border border-[var(--accent)]/20"
+                        ? "bg-[var(--accent-light)] text-[var(--accent)] border border-[var(--accent)]/15"
                         : i < activeStep
-                        ? "bg-emerald-400/8 text-emerald-400/60 border border-emerald-400/10"
-                        : "text-[var(--text-muted)] hover:text-[var(--text-secondary)] hover:bg-[var(--bg-card)] border border-transparent"
+                        ? "text-[var(--accent)]/40 border border-transparent"
+                        : "text-[var(--text-muted)] hover:text-[var(--text-secondary)] border border-transparent"
                     }`}
                   >
-                    <span className="font-mono text-[10px]">{s.step}</span>
-                    <span className="hidden sm:inline">{s.title.split(" ").slice(0, 2).join(" ")}</span>
+                    <span className="font-mono">{String(s.step).padStart(2, '0')}</span>
                   </button>
                 ))}
               </div>
             </div>
 
             {/* Step Content */}
-            <div className="px-6 py-6 overflow-y-auto" style={{ maxHeight: "calc(85vh - 210px)" }}>
+            <div className="px-5 py-5 overflow-y-auto" style={{ maxHeight: "calc(85vh - 180px)" }}>
               {/* Step Header */}
-              <div className="mb-5">
-                <p className="text-[11px] font-medium text-[var(--accent)] uppercase tracking-wider mb-1">
-                  Step {current.step}
+              <div className="mb-4">
+                <p className="text-[9px] font-mono text-[var(--accent)] tracking-[0.3em] uppercase mb-1 opacity-50">
+                  // Step {String(current.step).padStart(2, '0')}
                 </p>
-                <h3 className="text-[20px] font-semibold text-[var(--text-primary)]">
+                <h3 className="text-[18px] font-mono font-bold text-[var(--text-primary)] tracking-tight">
                   {current.title}
                 </h3>
               </div>
 
               {/* Instructions */}
-              <div className="space-y-3 mb-6">
+              <div className="space-y-2 mb-5">
                 {current.body.map((instruction, i) => (
                   <div key={`${activeStep}-${i}`} className={`flex items-start gap-3 slide-in-right stagger-${i + 1}`}>
-                    <div className="mt-0.5 w-5 h-5 rounded-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] flex items-center justify-center shrink-0">
-                      <span className="text-[10px] font-mono font-bold text-[var(--text-muted)]">
-                        {i + 1}
-                      </span>
-                    </div>
-                    <p className="text-[13px] text-[var(--text-secondary)] leading-relaxed">
+                    <span className="text-[9px] font-mono text-[var(--accent)] opacity-40 mt-0.5 shrink-0">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <p className="text-[12px] font-mono text-[var(--text-secondary)] leading-relaxed">
                       {instruction}
                     </p>
                   </div>
                 ))}
               </div>
 
-              {/* Tip Box */}
+              {/* Tip */}
               {current.tip && (
-                <div className="rounded-xl bg-[var(--accent-light)] border border-[var(--accent)]/15 px-4 py-3 flex items-start gap-3">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="text-[var(--accent)] mt-0.5 shrink-0">
-                    <circle cx="12" cy="12" r="10" />
-                    <path d="M12 16v-4" />
-                    <path d="M12 8h.01" />
-                  </svg>
-                  <p className="text-[12px] text-[var(--text-secondary)] leading-relaxed">
-                    <span className="font-semibold text-[var(--accent)]">Tip: </span>
+                <div className="border-l-2 border-[var(--accent)]/20 bg-[var(--accent-light)] px-4 py-3">
+                  <p className="text-[10px] font-mono text-[var(--text-secondary)] leading-relaxed">
+                    <span className="text-[var(--accent)] font-bold">TIP: </span>
                     {current.tip}
                   </p>
                 </div>
@@ -199,28 +188,28 @@ export function GuideModal() {
             </div>
 
             {/* Footer Navigation */}
-            <div className="flex items-center justify-between px-6 py-4 border-t border-[var(--border-subtle)]">
+            <div className="flex items-center justify-between px-5 py-3 border-t border-[var(--border-subtle)]">
               <button
                 onClick={() => setActiveStep(Math.max(0, activeStep - 1))}
                 disabled={activeStep === 0}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-card)] transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-mono font-bold tracking-wider uppercase text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all disabled:opacity-20 disabled:cursor-not-allowed cursor-pointer"
               >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                   <path d="M15 18l-6-6 6-6" />
                 </svg>
-                Previous
+                Prev
               </button>
 
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1">
                 {guideSteps.map((_, i) => (
                   <div
                     key={i}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                    className={`transition-all duration-300 ${
                       i === activeStep
-                        ? "bg-[var(--accent)] w-5"
+                        ? "bg-[var(--accent)] w-4 h-1"
                         : i < activeStep
-                        ? "bg-emerald-400/40 w-1.5"
-                        : "bg-[var(--border-default)] w-1.5"
+                        ? "bg-[var(--accent)]/30 w-1 h-1"
+                        : "bg-[var(--border-default)] w-1 h-1"
                     }`}
                   />
                 ))}
@@ -229,20 +218,20 @@ export function GuideModal() {
               {activeStep < guideSteps.length - 1 ? (
                 <button
                   onClick={() => setActiveStep(activeStep + 1)}
-                  className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-[12px] font-medium bg-[var(--accent)] text-[#0a0a0a] hover:bg-[var(--accent-hover)] btn-lift cursor-pointer"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-mono font-bold tracking-[0.1em] uppercase bg-[var(--accent)] text-[#000] hover:bg-[var(--accent-hover)] btn-terminal cursor-pointer"
                 >
                   Next
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                     <path d="M9 18l6-6-6-6" />
                   </svg>
                 </button>
               ) : (
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-[12px] font-medium bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/25 transition-all cursor-pointer"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-mono font-bold tracking-[0.1em] uppercase bg-[var(--accent)] text-[#000] hover:bg-[var(--accent-hover)] btn-terminal cursor-pointer"
                 >
                   Start Trading
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                     <path d="M5 12h14" />
                     <path d="M12 5l7 7-7 7" />
                   </svg>

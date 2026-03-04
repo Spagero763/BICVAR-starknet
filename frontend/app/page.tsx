@@ -6,36 +6,63 @@ import { OrderBook } from "@/components/OrderBook";
 import { PoolBalances } from "@/components/PoolBalances";
 import { GuideModal } from "@/components/GuideModal";
 import { useAccount } from "@starknet-react/core";
-
-const steps = [
-  { num: "01", label: "Deposit", desc: "Fund your vault with BTC or USDC" },
-  { num: "02", label: "Commit", desc: "Submit a private hash of your order" },
-  { num: "03", label: "Reveal", desc: "Disclose when you're ready to trade" },
-  { num: "04", label: "Settle", desc: "Matched at a fair midpoint price" },
-];
+import { useState, useEffect } from "react";
 
 export default function Home() {
   const { isConnected } = useAccount();
+  const [booted, setBooted] = useState(false);
+  const [bootLines, setBootLines] = useState<string[]>([]);
+
+  const bootSequence = [
+    "// BICVAR PROTOCOL v1.0",
+    "// INITIALIZING DARK POOL ENGINE...",
+    "// CONNECTING TO STARKNET SEPOLIA",
+    "// POSEIDON HASH MODULE: LOADED",
+    "// COMMIT-REVEAL ENGINE: ACTIVE",
+    "// STATUS: OPERATIONAL",
+  ];
+
+  useEffect(() => {
+    if (booted) return;
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i < bootSequence.length) {
+        setBootLines((prev) => [...prev, bootSequence[i]]);
+        i++;
+      } else {
+        clearInterval(interval);
+        setTimeout(() => setBooted(true), 400);
+      }
+    }, 120);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)]">
+    <div className="min-h-screen bg-[var(--bg-void)] relative">
+      {/* Grid background */}
+      <div className="fixed inset-0 grid-bg pointer-events-none" />
+
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 border-b border-[var(--border-subtle)] bg-[var(--bg-primary)]/95 glass">
-        <div className="max-w-[1200px] mx-auto px-6 lg:px-8">
-          <div className="flex items-center justify-between h-[72px]">
-            <div className="flex items-center gap-3 fade-in">
-              <span className="text-[22px] font-bold tracking-tight text-[var(--text-primary)]">
-                BICVAR
-              </span>
-              <span className="text-[11px] font-medium text-[var(--text-muted)] tracking-[0.2em] uppercase mt-1">
-                Exchange
+      <nav className="sticky top-0 z-50 border-b border-[var(--border-subtle)] bg-[var(--bg-void)]/90 glass">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-8">
+          <div className="flex items-center justify-between h-[60px]">
+            <div className="flex items-center gap-4 fade-in">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-[var(--accent)] glow-pulse" />
+                <span className="text-[14px] font-mono font-bold tracking-[0.15em] text-[var(--text-primary)] uppercase">
+                  BICVAR
+                </span>
+              </div>
+              <div className="h-4 w-px bg-[var(--border-default)]" />
+              <span className="text-[10px] font-mono text-[var(--text-muted)] tracking-[0.2em] uppercase">
+                Dark Pool Protocol
               </span>
             </div>
 
-            <div className="flex items-center gap-4 fade-in fade-in-delay-1">
-              <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--border-subtle)]">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 status-live" />
-                <span className="text-[12px] text-[var(--text-muted)]">Sepolia Testnet</span>
+            <div className="flex items-center gap-5 fade-in fade-in-delay-1">
+              <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 border border-[var(--border-subtle)] bg-[var(--bg-card)]">
+                <span className="w-1.5 h-1.5 bg-[var(--accent)] status-live" />
+                <span className="text-[10px] font-mono text-[var(--text-muted)] tracking-wider uppercase">Sepolia</span>
               </div>
               <WalletBar />
             </div>
@@ -43,54 +70,102 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* Hero Section - Only when not connected */}
+      {/* Boot Sequence / Hero - Only when not connected */}
       {!isConnected && (
-        <section className="max-w-[1200px] mx-auto px-6 lg:px-8 pt-24 pb-20">
-          <div className="max-w-2xl">
-            <p className="text-[13px] font-medium tracking-[0.15em] uppercase mb-6 fade-in-up accent-shimmer">
-              Private Trading Protocol
-            </p>
-            <h1 className="text-[42px] md:text-[56px] font-bold leading-[1.08] tracking-tight text-[var(--text-primary)] mb-6 fade-in-up fade-in-delay-1">
-              Trade privately.
-              <br />
-              Settle fairly.
-            </h1>
-            <p className="text-[17px] leading-[1.7] text-[var(--text-secondary)] max-w-lg mb-10 fade-in-up fade-in-delay-2">
-              A dark pool exchange on Starknet where your orders stay hidden 
-              until you choose to reveal them. No front-running. No information leakage.
-            </p>
-          </div>
-
-          {/* Steps */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-[var(--border-subtle)] rounded-2xl overflow-hidden mt-16 fade-in-up fade-in-delay-3">
-            {steps.map((step, i) => (
-              <div key={step.num} className={`bg-[var(--bg-card)] p-6 md:p-8 group transition-all duration-500 hover:bg-[var(--bg-elevated)] fade-in-scale stagger-${i + 4}`}>
-                <span className="text-[var(--accent)] text-[12px] font-mono font-medium group-hover:accent-shimmer transition-all">
-                  {step.num}
-                </span>
-                <h3 className="text-[var(--text-primary)] text-[16px] font-semibold mt-3 mb-2 transition-transform duration-300 group-hover:translate-x-1">
-                  {step.label}
-                </h3>
-                <p className="text-[var(--text-muted)] text-[13px] leading-relaxed transition-colors duration-300 group-hover:text-[var(--text-secondary)]">
-                  {step.desc}
+        <section className="max-w-[1400px] mx-auto px-6 lg:px-8 pt-20 pb-16">
+          {!booted ? (
+            <div className="max-w-2xl font-mono space-y-1">
+              {bootLines.map((line, i) => (
+                <p
+                  key={i}
+                  className={`text-[12px] terminal-in stagger-${Math.min(i + 1, 8)} ${
+                    i === bootLines.length - 1
+                      ? "text-[var(--accent)]"
+                      : "text-[var(--text-muted)]"
+                  }`}
+                >
+                  {line}
+                </p>
+              ))}
+              <span className="inline-block w-2 h-4 bg-[var(--accent)] mt-2" style={{ animation: "blink 1s step-end infinite" }} />
+            </div>
+          ) : (
+            <div className="fade-in">
+              {/* System header */}
+              <div className="mb-8">
+                <p className="text-[10px] font-mono text-[var(--text-muted)] tracking-[0.3em] uppercase mb-6 fade-in-up">
+                  // PRIVATE TRADING PROTOCOL ON STARKNET
+                </p>
+                <h1 className="text-[38px] md:text-[56px] lg:text-[68px] font-mono font-bold leading-[0.95] tracking-tight text-[var(--text-primary)] mb-2 fade-in-up fade-in-delay-1">
+                  TRADE IN
+                  <br />
+                  <span className="text-[var(--accent)] text-glow">THE DARK</span>
+                </h1>
+                <div className="h-px w-32 bg-[var(--accent)] mt-6 mb-6 fade-in-up fade-in-delay-2" style={{ opacity: 0.3 }} />
+                <p className="text-[13px] font-mono leading-[1.8] text-[var(--text-secondary)] max-w-lg fade-in-up fade-in-delay-2">
+                  Orders are Poseidon-hashed on-chain — invisible until you reveal them.
+                  <br />
+                  No front-running. No information leakage. No trust required.
                 </p>
               </div>
-            ))}
-          </div>
+
+              {/* Protocol Steps — terminal style */}
+              <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[var(--border-subtle)] fade-in-up fade-in-delay-3">
+                {[
+                  { id: "01", cmd: "DEPOSIT", desc: "Fund vault with BTC or USDC tokens" },
+                  { id: "02", cmd: "COMMIT", desc: "Submit Poseidon hash of order params" },
+                  { id: "03", cmd: "REVEAL", desc: "Disclose order when ready to trade" },
+                  { id: "04", cmd: "SETTLE", desc: "Matched at fair midpoint price" },
+                ].map((step, i) => (
+                  <div
+                    key={step.id}
+                    className={`bg-[var(--bg-card)] p-6 group transition-all duration-500 hover:bg-[var(--bg-elevated)] corner-marks terminal-in stagger-${i + 4}`}
+                  >
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-[10px] font-mono text-[var(--accent)] opacity-50">{step.id}</span>
+                      <span className="text-[10px] font-mono text-[var(--text-muted)]">//</span>
+                    </div>
+                    <h3 className="text-[14px] font-mono font-bold text-[var(--text-primary)] tracking-[0.1em] mb-2 transition-all duration-300 group-hover:text-[var(--accent)] group-hover:text-glow">
+                      {step.cmd}
+                    </h3>
+                    <p className="text-[11px] font-mono text-[var(--text-muted)] leading-relaxed transition-colors duration-300 group-hover:text-[var(--text-secondary)]">
+                      {step.desc}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              {/* System info bar */}
+              <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 text-[10px] font-mono text-[var(--text-muted)] tracking-wider fade-in-up fade-in-delay-4">
+                <span>NETWORK: STARKNET SEPOLIA</span>
+                <span className="text-[var(--border-default)]">|</span>
+                <span>HASH: POSEIDON</span>
+                <span className="text-[var(--border-default)]">|</span>
+                <span>ENGINE: COMMIT-REVEAL</span>
+                <span className="text-[var(--border-default)]">|</span>
+                <span className="text-[var(--accent)]">STATUS: LIVE</span>
+              </div>
+            </div>
+          )}
         </section>
       )}
 
-      {/* Process Bar - When connected */}
+      {/* System Status Bar - When connected */}
       {isConnected && (
-        <div className="border-b border-[var(--border-subtle)] fade-in">
-          <div className="max-w-[1200px] mx-auto px-6 lg:px-8 py-4">
-            <div className="flex items-center gap-6 overflow-x-auto">
-              {steps.map((step, i) => (
-                <div key={step.num} className={`flex items-center gap-6 shrink-0 fade-in stagger-${i + 1}`}>
-                  {i > 0 && <div className="w-8 h-px bg-[var(--border-subtle)]" />}
-                  <div className="flex items-center gap-3 group cursor-default">
-                    <span className="text-[var(--accent)] text-[11px] font-mono transition-all duration-300 group-hover:accent-shimmer">{step.num}</span>
-                    <span className="text-[13px] text-[var(--text-secondary)] transition-colors duration-300 group-hover:text-[var(--text-primary)]">{step.label}</span>
+        <div className="border-b border-[var(--border-subtle)] bg-[var(--bg-card)]/50 fade-in">
+          <div className="max-w-[1400px] mx-auto px-6 lg:px-8 py-3">
+            <div className="flex items-center gap-6 overflow-x-auto text-[10px] font-mono text-[var(--text-muted)] tracking-wider uppercase">
+              {[
+                { id: "01", label: "Deposit" },
+                { id: "02", label: "Commit" },
+                { id: "03", label: "Reveal" },
+                { id: "04", label: "Settle" },
+              ].map((step, i) => (
+                <div key={step.id} className={`flex items-center gap-4 shrink-0 terminal-in stagger-${i + 1}`}>
+                  {i > 0 && <span className="text-[var(--border-default)]">—</span>}
+                  <div className="flex items-center gap-2 group cursor-default">
+                    <span className="text-[var(--accent)] opacity-40">{step.id}</span>
+                    <span className="transition-colors duration-300 group-hover:text-[var(--text-secondary)]">{step.label}</span>
                   </div>
                 </div>
               ))}
@@ -100,16 +175,16 @@ export default function Home() {
       )}
 
       {/* Main Content */}
-      <main className="max-w-[1200px] mx-auto px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <main className="max-w-[1400px] mx-auto px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           {/* Left Column */}
-          <div className="lg:col-span-4 xl:col-span-3 space-y-6">
-            <div className="fade-in-scale fade-in-delay-1"><OrderForm /></div>
-            <div className="fade-in-scale fade-in-delay-2"><PoolBalances /></div>
+          <div className="lg:col-span-4 xl:col-span-3 space-y-4">
+            <div className="terminal-in fade-in-delay-1"><OrderForm /></div>
+            <div className="terminal-in fade-in-delay-2"><PoolBalances /></div>
           </div>
 
           {/* Right Column */}
-          <div className="lg:col-span-8 xl:col-span-9 fade-in-scale fade-in-delay-2">
+          <div className="lg:col-span-8 xl:col-span-9 terminal-in fade-in-delay-2">
             <OrderBook />
           </div>
         </div>
@@ -118,18 +193,19 @@ export default function Home() {
       <GuideModal />
 
       {/* Footer */}
-      <footer className="border-t border-[var(--border-subtle)] mt-20">
-        <div className="max-w-[1200px] mx-auto px-6 lg:px-8 py-8">
+      <footer className="border-t border-[var(--border-subtle)] mt-16">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-8 py-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <span className="text-[14px] font-semibold text-[var(--text-primary)]">BICVAR</span>
-              <span className="text-[12px] text-[var(--text-muted)]">Private Dark Pool Exchange</span>
+              <div className="w-1.5 h-1.5 bg-[var(--accent)] opacity-40" />
+              <span className="text-[11px] font-mono font-bold text-[var(--text-secondary)] tracking-[0.1em] uppercase">BICVAR</span>
+              <span className="text-[10px] font-mono text-[var(--text-muted)]">// Private Dark Pool Protocol</span>
             </div>
-            <div className="flex items-center gap-6 text-[12px] text-[var(--text-muted)]">
+            <div className="flex items-center gap-4 text-[10px] font-mono text-[var(--text-muted)] tracking-wider uppercase">
               <span className="transition-colors duration-300 hover:text-[var(--accent)] cursor-default">Starknet</span>
-              <span>·</span>
-              <span className="transition-colors duration-300 hover:text-[var(--accent)] cursor-default">Poseidon Hash</span>
-              <span>·</span>
+              <span className="opacity-20">|</span>
+              <span className="transition-colors duration-300 hover:text-[var(--accent)] cursor-default">Poseidon</span>
+              <span className="opacity-20">|</span>
               <span className="transition-colors duration-300 hover:text-[var(--accent)] cursor-default">Commit-Reveal</span>
             </div>
           </div>
