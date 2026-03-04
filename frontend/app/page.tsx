@@ -5,6 +5,7 @@ import { OrderForm } from "@/components/OrderForm";
 import { OrderBook } from "@/components/OrderBook";
 import { PoolBalances } from "@/components/PoolBalances";
 import { GuideModal } from "@/components/GuideModal";
+import { BackgroundActivity } from "@/components/BackgroundActivity";
 import { useAccount } from "@starknet-react/core";
 import { useState, useEffect } from "react";
 
@@ -40,7 +41,10 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[var(--bg-void)] relative">
       {/* Grid background */}
-      <div className="fixed inset-0 grid-bg pointer-events-none" />
+      <div className="fixed inset-0 grid-bg grid-pulse pointer-events-none" />
+
+      {/* Background activity: particles, sweep line, edge streams */}
+      <BackgroundActivity />
 
       {/* Navigation */}
       <nav className="sticky top-0 z-50 border-b border-[var(--border-subtle)] bg-[var(--bg-void)]/90 glass">
