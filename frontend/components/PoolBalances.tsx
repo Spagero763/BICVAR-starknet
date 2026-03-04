@@ -184,20 +184,20 @@ export function PoolBalances() {
       <div className="p-6 space-y-5">
         {/* Balance Cards */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="bg-[var(--bg-primary)] rounded-xl p-4 border border-[var(--border-subtle)]">
+          <div className="bg-[var(--bg-primary)] rounded-xl p-4 border border-[var(--border-subtle)] transition-all duration-300 hover:border-orange-400/20 hover:shadow-lg hover:shadow-orange-500/5 group">
             <div className="flex items-center gap-2 mb-3">
-              <span className="w-6 h-6 rounded-full bg-orange-500/10 flex items-center justify-center text-[10px] font-bold text-orange-400">B</span>
+              <span className="w-6 h-6 rounded-full bg-orange-500/10 flex items-center justify-center text-[10px] font-bold text-orange-400 transition-transform duration-300 group-hover:scale-110">B</span>
               <span className="text-[12px] font-medium text-[var(--text-muted)]">BTC</span>
             </div>
-            <p className="font-mono text-[17px] font-semibold text-[var(--text-primary)]">{formatAmount(btcBalance)}</p>
+            <p className="font-mono text-[17px] font-semibold text-[var(--text-primary)] transition-colors duration-300 group-hover:text-orange-300">{formatAmount(btcBalance)}</p>
             <p className="text-[11px] text-[var(--text-muted)] mt-1 font-mono">Wallet: {formatAmount(btcWallet)}</p>
           </div>
-          <div className="bg-[var(--bg-primary)] rounded-xl p-4 border border-[var(--border-subtle)]">
+          <div className="bg-[var(--bg-primary)] rounded-xl p-4 border border-[var(--border-subtle)] transition-all duration-300 hover:border-blue-400/20 hover:shadow-lg hover:shadow-blue-500/5 group">
             <div className="flex items-center gap-2 mb-3">
-              <span className="w-6 h-6 rounded-full bg-blue-500/10 flex items-center justify-center text-[10px] font-bold text-blue-400">U</span>
+              <span className="w-6 h-6 rounded-full bg-blue-500/10 flex items-center justify-center text-[10px] font-bold text-blue-400 transition-transform duration-300 group-hover:scale-110">U</span>
               <span className="text-[12px] font-medium text-[var(--text-muted)]">USDC</span>
             </div>
-            <p className="font-mono text-[17px] font-semibold text-[var(--text-primary)]">{formatAmount(usdcBalance)}</p>
+            <p className="font-mono text-[17px] font-semibold text-[var(--text-primary)] transition-colors duration-300 group-hover:text-blue-300">{formatAmount(usdcBalance)}</p>
             <p className="text-[11px] text-[var(--text-muted)] mt-1 font-mono">Wallet: {formatAmount(usdcWallet)}</p>
           </div>
         </div>
@@ -231,7 +231,7 @@ export function PoolBalances() {
             >
               {tab}
               {activeTab === tab && (
-                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--accent)]" />
+                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--accent)] tab-underline" />
               )}
             </button>
           ))}
@@ -246,17 +246,20 @@ export function PoolBalances() {
               value={depositAmount}
               onChange={(e) => setDepositAmount(e.target.value)}
               placeholder={`${activeToken} amount`}
-              className="flex-1 input-field rounded-xl px-4 py-3 text-[14px] font-mono"
+              className="flex-1 input-field rounded-xl px-4 py-3.5 text-[14px] font-mono"
             />
             <button
               onClick={handleDeposit}
               disabled={isDepositing || !depositAmount}
-              className="px-6 py-3 text-[13px] font-semibold bg-emerald-500 hover:bg-emerald-400 text-white rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+              className="px-7 py-3.5 text-[13px] font-semibold bg-emerald-500 hover:bg-emerald-400 text-white rounded-xl btn-lift disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer whitespace-nowrap"
             >
               {isDepositing ? (
-                <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
-                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeDasharray="60" strokeLinecap="round" />
-                </svg>
+                <span className="flex items-center gap-2">
+                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeDasharray="60" strokeLinecap="round" />
+                  </svg>
+                  ...
+                </span>
               ) : "Deposit"}
             </button>
           </div>
@@ -268,17 +271,20 @@ export function PoolBalances() {
               value={withdrawAmount}
               onChange={(e) => setWithdrawAmount(e.target.value)}
               placeholder={`${activeToken} amount`}
-              className="flex-1 input-field rounded-xl px-4 py-3 text-[14px] font-mono"
+              className="flex-1 input-field rounded-xl px-4 py-3.5 text-[14px] font-mono"
             />
             <button
               onClick={handleWithdraw}
               disabled={isWithdrawing || !withdrawAmount}
-              className="px-6 py-3 text-[13px] font-semibold border border-[var(--border-default)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-active)] rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+              className="px-7 py-3.5 text-[13px] font-semibold bg-[var(--bg-elevated)] text-[var(--text-primary)] border border-[var(--border-active)] hover:bg-[var(--accent)] hover:text-[#0a0a0a] hover:border-[var(--accent)] rounded-xl btn-lift disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer whitespace-nowrap"
             >
               {isWithdrawing ? (
-                <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
-                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeDasharray="60" strokeLinecap="round" />
-                </svg>
+                <span className="flex items-center gap-2">
+                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeDasharray="60" strokeLinecap="round" />
+                  </svg>
+                  ...
+                </span>
               ) : "Withdraw"}
             </button>
           </div>
@@ -288,7 +294,7 @@ export function PoolBalances() {
         <button
           onClick={handleMintTestTokens}
           disabled={isMinting}
-          className="w-full py-3 text-[13px] font-medium border border-dashed border-[var(--border-default)] text-[var(--text-muted)] hover:text-[var(--accent)] hover:border-[var(--accent)]/30 rounded-xl transition-all cursor-pointer"
+          className="w-full py-3 text-[13px] font-medium border border-dashed border-[var(--border-default)] text-[var(--text-muted)] hover:text-[var(--accent)] hover:border-[var(--accent)]/30 rounded-xl btn-lift cursor-pointer"
         >
           {isMinting ? (
             <span className="flex items-center justify-center gap-2">

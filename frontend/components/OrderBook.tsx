@@ -49,8 +49,8 @@ function StatusBadge({ status }: { status: number }) {
   };
   const c = config[status] || { bg: "bg-neutral-400/10", text: "text-neutral-500" };
   return (
-    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium ${c.bg} ${c.text}`}>
-      <span className="w-1.5 h-1.5 rounded-full bg-current" />
+    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium ${c.bg} ${c.text} transition-all duration-300`}>
+      <span className={`w-1.5 h-1.5 rounded-full bg-current ${status === STATUS_OPEN || status === STATUS_REVEALED ? 'status-live' : ''}`} />
       {STATUS_LABELS[status] || "Unknown"}
     </span>
   );
@@ -335,7 +335,7 @@ export function OrderBook() {
             <button
               onClick={handleMatch}
               disabled={!canMatch}
-              className={`px-5 py-2 text-[12px] font-semibold rounded-lg transition-all cursor-pointer ${
+              className={`px-5 py-2 text-[12px] font-semibold rounded-lg btn-lift cursor-pointer ${
                 canMatch
                   ? "bg-[var(--accent)] text-[#0a0a0a] hover:bg-[var(--accent-hover)]"
                   : "bg-[var(--bg-elevated)] text-[var(--text-muted)] opacity-50 cursor-not-allowed"
@@ -355,8 +355,8 @@ export function OrderBook() {
 
       {/* Empty State */}
       {orders.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-[var(--bg-elevated)] flex items-center justify-center">
+        <div className="flex flex-col items-center justify-center py-20 gap-4 fade-in">
+          <div className="w-12 h-12 rounded-2xl bg-[var(--bg-elevated)] flex items-center justify-center float">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-[var(--text-muted)]">
               <path d="M9 5H2v7l6.29 6.29c.94.94 2.48.94 3.42 0l4.58-4.58c.94-.94.94-2.48 0-3.42L9 5z" />
               <circle cx="6" cy="9" r="1" fill="currentColor" />
@@ -378,10 +378,10 @@ export function OrderBook() {
           </div>
 
           {/* Orders */}
-          {orders.map((order) => (
+          {orders.map((order, idx) => (
             <div
               key={order.orderId}
-              className={`grid grid-cols-[50px_1fr_100px_1fr_auto] gap-4 items-center px-6 py-4 border-b border-[var(--border-subtle)] transition-colors ${
+              className={`grid grid-cols-[50px_1fr_100px_1fr_auto] gap-4 items-center px-6 py-4 border-b border-[var(--border-subtle)] order-row row-reveal stagger-${Math.min(idx + 1, 8)} ${
                 isMyOrder(order.trader)
                   ? "bg-[var(--accent-light)]/30"
                   : "hover:bg-[var(--bg-secondary)]"
@@ -418,7 +418,7 @@ export function OrderBook() {
                     <button
                       onClick={() => handleReveal(order)}
                       disabled={revealingId === order.orderId}
-                      className="px-3 py-1.5 text-[11px] font-medium bg-[var(--accent)] text-[#0a0a0a] rounded-lg hover:bg-[var(--accent-hover)] transition-all disabled:opacity-40 cursor-pointer"
+                      className="px-3 py-1.5 text-[11px] font-medium bg-[var(--accent)] text-[#0a0a0a] rounded-lg hover:bg-[var(--accent-hover)] btn-lift disabled:opacity-40 cursor-pointer"
                     >
                       {revealingId === order.orderId ? "Revealing..." : "Reveal"}
                     </button>
@@ -435,7 +435,7 @@ export function OrderBook() {
                   (order.status === STATUS_OPEN || order.status === STATUS_REVEALED) && (
                     <button
                       onClick={() => handleCancel(order.orderId)}
-                      className="px-3 py-1.5 text-[11px] font-medium border border-[var(--border-default)] text-[var(--text-muted)] hover:text-red-400 hover:border-red-400/30 rounded-lg transition-all cursor-pointer"
+                      className="px-3 py-1.5 text-[11px] font-medium border border-[var(--border-default)] text-[var(--text-muted)] hover:text-red-400 hover:border-red-400/30 rounded-lg btn-lift cursor-pointer"
                     >
                       Cancel
                     </button>

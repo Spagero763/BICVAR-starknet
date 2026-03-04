@@ -94,7 +94,7 @@ export function GuideModal() {
       {/* Floating Guide Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--accent)] text-[#0a0a0a] text-[13px] font-semibold shadow-lg hover:bg-[var(--accent-hover)] hover:scale-[1.03] transition-all duration-200 cursor-pointer"
+        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-2.5 rounded-full bg-[var(--accent)] text-[#0a0a0a] text-[13px] font-semibold shadow-lg shadow-[var(--accent)]/15 hover:shadow-[var(--accent)]/30 btn-lift cursor-pointer fade-in-up fade-in-delay-5"
       >
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
           <circle cx="12" cy="12" r="10" />
@@ -109,12 +109,12 @@ export function GuideModal() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           {/* Backdrop */}
           <div
-            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/70 glass backdrop-in"
             onClick={() => setIsOpen(false)}
           />
 
           {/* Modal Content */}
-          <div className="relative w-full max-w-2xl max-h-[85vh] overflow-hidden rounded-2xl border border-[var(--border-default)] bg-[var(--bg-secondary)] shadow-2xl fade-in">
+          <div className="relative w-full max-w-2xl max-h-[85vh] overflow-hidden rounded-2xl border border-[var(--border-default)] bg-[var(--bg-secondary)] shadow-2xl modal-in">
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-5 border-b border-[var(--border-subtle)]">
               <div>
@@ -169,7 +169,7 @@ export function GuideModal() {
               {/* Instructions */}
               <div className="space-y-3 mb-6">
                 {current.body.map((instruction, i) => (
-                  <div key={i} className="flex items-start gap-3">
+                  <div key={`${activeStep}-${i}`} className={`flex items-start gap-3 slide-in-right stagger-${i + 1}`}>
                     <div className="mt-0.5 w-5 h-5 rounded-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] flex items-center justify-center shrink-0">
                       <span className="text-[10px] font-mono font-bold text-[var(--text-muted)]">
                         {i + 1}
@@ -229,7 +229,7 @@ export function GuideModal() {
               {activeStep < guideSteps.length - 1 ? (
                 <button
                   onClick={() => setActiveStep(activeStep + 1)}
-                  className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-[12px] font-medium bg-[var(--accent)] text-[#0a0a0a] hover:bg-[var(--accent-hover)] transition-all cursor-pointer"
+                  className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-[12px] font-medium bg-[var(--accent)] text-[#0a0a0a] hover:bg-[var(--accent-hover)] btn-lift cursor-pointer"
                 >
                   Next
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">

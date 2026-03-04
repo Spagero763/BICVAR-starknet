@@ -36,15 +36,15 @@ export function WalletBar() {
 
         {showMenu && (
           <>
-            <div className="fixed inset-0 z-40" onClick={() => setShowMenu(false)} />
-            <div className="absolute right-0 top-full mt-2 w-52 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-default)] shadow-xl shadow-black/30 overflow-hidden z-50">
+            <div className="fixed inset-0 z-40 backdrop-in" onClick={() => setShowMenu(false)} />
+            <div className="absolute right-0 top-full mt-2 w-52 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-default)] shadow-xl shadow-black/30 overflow-hidden z-50 slide-down">
               <div className="px-4 py-3 border-b border-[var(--border-subtle)]">
                 <p className="text-[11px] text-[var(--text-muted)] mb-1">Connected Wallet</p>
                 <p className="text-[12px] font-mono text-[var(--text-secondary)] truncate">{address}</p>
               </div>
               <button
                 onClick={() => { disconnect(); setShowMenu(false); }}
-                className="w-full px-4 py-3 text-left text-[13px] text-[var(--sell)] hover:bg-[var(--sell-muted)] transition-colors cursor-pointer"
+                className="w-full px-4 py-3 text-left text-[13px] text-[var(--sell)] hover:bg-[var(--sell-muted)] transition-all duration-200 cursor-pointer hover:pl-5"
               >
                 Disconnect
               </button>
@@ -61,7 +61,7 @@ export function WalletBar() {
         <button
           key={connector.id}
           onClick={() => connect({ connector })}
-          className="px-5 py-2 text-[13px] font-semibold rounded-full bg-[var(--accent)] text-[#0a0a0a] hover:bg-[var(--accent-hover)] transition-all cursor-pointer"
+          className="px-5 py-2 text-[13px] font-semibold rounded-full bg-[var(--accent)] text-[#0a0a0a] hover:bg-[var(--accent-hover)] btn-lift cursor-pointer"
         >
           {connector.name}
         </button>
