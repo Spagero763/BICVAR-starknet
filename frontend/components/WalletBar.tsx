@@ -1,7 +1,7 @@
 "use client";
 
 import { useAccount, useConnect, useDisconnect } from "@starknet-react/core";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 const WALLET_INFO = {
   argentX: {
@@ -280,13 +280,17 @@ function WalletNotFoundModal({ walletKey, onClose }: { walletKey: string | null;
 
 export function WalletBar() {
   const { address, isConnected } = useAccount();
-  const { connect, connectors } = useConnect();
+  const { connectAsync, connectors } = useConnect();
   const { disconnect } = useDisconnect();
   const [showMenu, setShowMenu] = useState(false);
   const [notFoundWallet, setNotFoundWallet] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [inWalletBrowser, setInWalletBrowser] = useState(false);
 
-  const isMobile = typeof window !== "undefined" && isMobileDevice();
-  const inWalletBrowser = typeof window !== "undefined" && isInsideWalletBrowser();
+  useEffect(() => {
+    setIsMobile(isMobileDevice());
+    setInWalletBrowser(isInsideWalletBrowser());
+  }, []);
 
   const handleConnect = useCallback(async (connector: (typeof connectors)[0]) => {
     try {
@@ -302,7 +306,7 @@ export function WalletBar() {
         return;
       }
 
-      connect({ connector });
+      await connectAsync({ connector });
     } catch {
       if (isMobile && !inWalletBrowser) {
         setNotFoundWallet("deeplink");
@@ -311,7 +315,7 @@ export function WalletBar() {
         setNotFoundWallet(key);
       }
     }
-  }, [isMobile, inWalletBrowser, connect]);
+  }, [isMobile, inWalletBrowser, connectAsync]);
 
   const handleMobileConnect = useCallback(() => {
     setNotFoundWallet("deeplink");
