@@ -239,53 +239,53 @@ export function PoolBalances() {
 
         {/* Deposit / Withdraw */}
         {activeTab === "deposit" ? (
-          <div className="flex gap-3">
+          <div className="space-y-3">
             <input
               type="text"
               inputMode="decimal"
               value={depositAmount}
               onChange={(e) => setDepositAmount(e.target.value)}
-              placeholder={`${activeToken} amount`}
-              className="flex-1 input-field rounded-xl px-4 py-3.5 text-[14px] font-mono"
+              placeholder={`Enter ${activeToken} amount`}
+              className="w-full input-field rounded-xl px-4 py-3.5 text-[14px] font-mono"
             />
             <button
               onClick={handleDeposit}
               disabled={isDepositing || !depositAmount}
-              className="px-7 py-3.5 text-[13px] font-semibold bg-emerald-500 hover:bg-emerald-400 text-white rounded-xl btn-lift disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer whitespace-nowrap"
+              className="w-full py-3.5 text-[14px] font-semibold bg-emerald-500 hover:bg-emerald-400 text-white rounded-xl btn-lift disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
             >
               {isDepositing ? (
-                <span className="flex items-center gap-2">
+                <span className="flex items-center justify-center gap-2">
                   <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
                     <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeDasharray="60" strokeLinecap="round" />
                   </svg>
-                  ...
+                  Depositing...
                 </span>
-              ) : "Deposit"}
+              ) : `Deposit ${activeToken}`}
             </button>
           </div>
         ) : (
-          <div className="flex gap-3">
+          <div className="space-y-3">
             <input
               type="text"
               inputMode="decimal"
               value={withdrawAmount}
               onChange={(e) => setWithdrawAmount(e.target.value)}
-              placeholder={`${activeToken} amount`}
-              className="flex-1 input-field rounded-xl px-4 py-3.5 text-[14px] font-mono"
+              placeholder={`Enter ${activeToken} amount`}
+              className="w-full input-field rounded-xl px-4 py-3.5 text-[14px] font-mono"
             />
             <button
               onClick={handleWithdraw}
               disabled={isWithdrawing || !withdrawAmount}
-              className="px-7 py-3.5 text-[13px] font-semibold bg-[var(--bg-elevated)] text-[var(--text-primary)] border border-[var(--border-active)] hover:bg-[var(--accent)] hover:text-[#0a0a0a] hover:border-[var(--accent)] rounded-xl btn-lift disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer whitespace-nowrap"
+              className="w-full py-3.5 text-[14px] font-semibold bg-[var(--accent)] text-[#0a0a0a] hover:bg-[var(--accent-hover)] rounded-xl btn-lift disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
             >
               {isWithdrawing ? (
-                <span className="flex items-center gap-2">
+                <span className="flex items-center justify-center gap-2">
                   <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
                     <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeDasharray="60" strokeLinecap="round" />
                   </svg>
-                  ...
+                  Withdrawing...
                 </span>
-              ) : "Withdraw"}
+              ) : `Withdraw ${activeToken}`}
             </button>
           </div>
         )}
