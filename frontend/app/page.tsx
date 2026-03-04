@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { WalletBar } from "@/components/WalletBar";
 import { OrderForm } from "@/components/OrderForm";
 import { OrderBook } from "@/components/OrderBook";
@@ -8,161 +7,131 @@ import { PoolBalances } from "@/components/PoolBalances";
 import { GuideModal } from "@/components/GuideModal";
 import { useAccount } from "@starknet-react/core";
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 16 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.08, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] },
-  }),
-};
-
 const steps = [
-  { num: "01", label: "Deposit", desc: "Fund your vault" },
-  { num: "02", label: "Commit", desc: "Hash your intent" },
-  { num: "03", label: "Reveal", desc: "Unlock when ready" },
-  { num: "04", label: "Settle", desc: "Atomic execution" },
+  { num: "01", label: "Deposit", desc: "Fund your vault with BTC or USDC" },
+  { num: "02", label: "Commit", desc: "Submit a private hash of your order" },
+  { num: "03", label: "Reveal", desc: "Disclose when you're ready to trade" },
+  { num: "04", label: "Settle", desc: "Matched at a fair midpoint price" },
 ];
 
 export default function Home() {
   const { isConnected } = useAccount();
 
   return (
-    <div className="min-h-screen mesh-gradient dot-grid relative">
-      <header className="sticky top-0 z-50 border-b border-[var(--border-subtle)] bg-[var(--bg-primary)]/80 backdrop-blur-xl">
-        <div className="max-w-[1440px] mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round">
-                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                  <path d="M2 17l10 5 10-5" />
-                  <path d="M2 12l10 5 10-5" />
-                </svg>
-              </div>
-            </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-[17px] font-semibold tracking-tight text-[var(--text-primary)]">
+    <div className="min-h-screen bg-[var(--bg-primary)]">
+      {/* Navigation */}
+      <nav className="sticky top-0 z-50 border-b border-[var(--border-subtle)] bg-[var(--bg-primary)]/95 backdrop-blur-md">
+        <div className="max-w-[1200px] mx-auto px-6 lg:px-8">
+          <div className="flex items-center justify-between h-[72px]">
+            <div className="flex items-center gap-3">
+              <span className="text-[22px] font-bold tracking-tight text-[var(--text-primary)]">
                 BICVAR
               </span>
-              <span className="text-[11px] font-medium text-[var(--text-muted)] tracking-widest uppercase">
+              <span className="text-[11px] font-medium text-[var(--text-muted)] tracking-[0.2em] uppercase mt-1">
                 Exchange
               </span>
             </div>
-          </div>
 
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[var(--bg-card)] border border-[var(--border-subtle)]">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-[11px] font-medium text-[var(--text-muted)]">Sepolia</span>
+            <div className="flex items-center gap-4">
+              <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--border-subtle)]">
+                <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                <span className="text-[12px] text-[var(--text-muted)]">Sepolia Testnet</span>
+              </div>
+              <WalletBar />
             </div>
-            <WalletBar />
           </div>
         </div>
-      </header>
+      </nav>
 
-      <div className="border-b border-[var(--border-subtle)]">
-        <div className="max-w-[1440px] mx-auto px-6 py-3">
-          <div className="flex items-center gap-1 overflow-x-auto">
-            {steps.map((step, i) => (
-              <div key={step.num} className="flex items-center gap-1">
-                {i > 0 && (
-                  <div className="w-8 h-px bg-gradient-to-r from-[var(--border-default)] to-transparent mx-1" />
-                )}
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-[var(--bg-card)] transition-colors shrink-0 group cursor-default">
-                  <span className="text-[10px] font-mono font-bold text-blue-400/60 group-hover:text-blue-400 transition-colors">
-                    {step.num}
-                  </span>
-                  <span className="text-[12px] font-medium text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] transition-colors">
-                    {step.label}
-                  </span>
-                  <span className="text-[10px] text-[var(--text-muted)] hidden md:inline">
-                    {step.desc}
-                  </span>
-                </div>
+      {/* Hero Section - Only when not connected */}
+      {!isConnected && (
+        <section className="max-w-[1200px] mx-auto px-6 lg:px-8 pt-24 pb-20">
+          <div className="max-w-2xl">
+            <p className="text-[var(--accent)] text-[13px] font-medium tracking-[0.15em] uppercase mb-6 fade-in">
+              Private Trading Protocol
+            </p>
+            <h1 className="text-[42px] md:text-[56px] font-bold leading-[1.08] tracking-tight text-[var(--text-primary)] mb-6 fade-in fade-in-delay-1">
+              Trade privately.
+              <br />
+              Settle fairly.
+            </h1>
+            <p className="text-[17px] leading-[1.7] text-[var(--text-secondary)] max-w-lg mb-10 fade-in fade-in-delay-2">
+              A dark pool exchange on Starknet where your orders stay hidden 
+              until you choose to reveal them. No front-running. No information leakage.
+            </p>
+          </div>
+
+          {/* Steps */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-[var(--border-subtle)] rounded-2xl overflow-hidden mt-16 fade-in fade-in-delay-3">
+            {steps.map((step) => (
+              <div key={step.num} className="bg-[var(--bg-card)] p-6 md:p-8">
+                <span className="text-[var(--accent)] text-[12px] font-mono font-medium">
+                  {step.num}
+                </span>
+                <h3 className="text-[var(--text-primary)] text-[16px] font-semibold mt-3 mb-2">
+                  {step.label}
+                </h3>
+                <p className="text-[var(--text-muted)] text-[13px] leading-relaxed">
+                  {step.desc}
+                </p>
               </div>
             ))}
           </div>
-        </div>
-      </div>
-
-      {!isConnected && (
-        <motion.section
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6 }}
-          className="max-w-[1440px] mx-auto px-6 pt-20 pb-16 text-center"
-        >
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.6 }}
-          >
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-[var(--text-primary)] leading-tight">
-              Private BTC trading.
-              <br />
-              <span className="bg-gradient-to-r from-blue-400 via-violet-400 to-blue-400 bg-clip-text text-transparent">
-                Commit. Reveal. Settle.
-              </span>
-            </h2>
-            <p className="mt-5 text-[15px] text-[var(--text-secondary)] max-w-lg mx-auto leading-relaxed">
-              Dark pool exchange on Starknet. Orders are Poseidon-hashed
-              on-chain — invisible until you reveal and match.
-            </p>
-          </motion.div>
-        </motion.section>
+        </section>
       )}
 
-      <main className="max-w-[1440px] mx-auto px-6 py-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-          <motion.div
-            className="lg:col-span-4 xl:col-span-3 space-y-5"
-            initial="hidden"
-            animate="visible"
-            variants={{ visible: { transition: { staggerChildren: 0.08 } } }}
-          >
-            <motion.div variants={fadeUp} custom={0}>
-              <OrderForm />
-            </motion.div>
-            <motion.div variants={fadeUp} custom={1}>
-              <PoolBalances />
-            </motion.div>
-          </motion.div>
+      {/* Process Bar - When connected */}
+      {isConnected && (
+        <div className="border-b border-[var(--border-subtle)]">
+          <div className="max-w-[1200px] mx-auto px-6 lg:px-8 py-4">
+            <div className="flex items-center gap-6 overflow-x-auto">
+              {steps.map((step, i) => (
+                <div key={step.num} className="flex items-center gap-6 shrink-0">
+                  {i > 0 && <div className="w-8 h-px bg-[var(--border-subtle)]" />}
+                  <div className="flex items-center gap-3">
+                    <span className="text-[var(--accent)] text-[11px] font-mono">{step.num}</span>
+                    <span className="text-[13px] text-[var(--text-secondary)]">{step.label}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
-          <motion.div
-            className="lg:col-span-8 xl:col-span-9"
-            variants={fadeUp}
-            initial="hidden"
-            animate="visible"
-            custom={2}
-          >
+      {/* Main Content */}
+      <main className="max-w-[1200px] mx-auto px-6 lg:px-8 py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Left Column */}
+          <div className="lg:col-span-4 xl:col-span-3 space-y-6">
+            <OrderForm />
+            <PoolBalances />
+          </div>
+
+          {/* Right Column */}
+          <div className="lg:col-span-8 xl:col-span-9">
             <OrderBook />
-          </motion.div>
+          </div>
         </div>
       </main>
 
       <GuideModal />
 
-      <footer className="mt-auto border-t border-[var(--border-subtle)]">
-        <div className="max-w-[1440px] mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <span className="text-[12px] font-semibold text-[var(--text-muted)]">BICVAR</span>
-            <span className="text-[10px] text-[var(--text-muted)]">·</span>
-            <span className="text-[11px] text-[var(--text-muted)]">RE{"{DEFINE}"} Hackathon 2026</span>
-          </div>
-          <div className="flex items-center gap-5 text-[11px] text-[var(--text-muted)]">
-            <span className="flex items-center gap-1.5">
-              <span className="w-1 h-1 rounded-full bg-blue-400/50" />
-              Starknet
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-1 h-1 rounded-full bg-violet-400/50" />
-              Poseidon Hash
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-1 h-1 rounded-full bg-emerald-400/50" />
-              Commit-Reveal
-            </span>
+      {/* Footer */}
+      <footer className="border-t border-[var(--border-subtle)] mt-20">
+        <div className="max-w-[1200px] mx-auto px-6 lg:px-8 py-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <span className="text-[14px] font-semibold text-[var(--text-primary)]">BICVAR</span>
+              <span className="text-[12px] text-[var(--text-muted)]">Private Dark Pool Exchange</span>
+            </div>
+            <div className="flex items-center gap-6 text-[12px] text-[var(--text-muted)]">
+              <span>Starknet</span>
+              <span>·</span>
+              <span>Poseidon Hash</span>
+              <span>·</span>
+              <span>Commit-Reveal</span>
+            </div>
           </div>
         </div>
       </footer>

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { motion } from "framer-motion";
 import { useAccount, useSendTransaction } from "@starknet-react/core";
 import { Contract, RpcProvider, CallData } from "starknet";
 import {
@@ -18,23 +17,6 @@ function formatAmount(raw: bigint | string, decimals = 18): string {
   const frac = bn % BigInt(10 ** decimals);
   const fracStr = frac.toString().padStart(decimals, "0").slice(0, 4).replace(/0+$/, "");
   return fracStr ? `${whole}.${fracStr}` : whole.toString();
-}
-
-function BalanceCard({ label, icon, pool, wallet }: { label: string; icon: React.ReactNode; pool: bigint; wallet: bigint }) {
-  return (
-    <div className="bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl p-4 space-y-2.5">
-      <div className="flex items-center gap-2">
-        {icon}
-        <span className="text-[12px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">{label}</span>
-      </div>
-      <div>
-        <p className="font-mono text-[16px] font-semibold text-[var(--text-primary)] leading-none">{formatAmount(pool)}</p>
-        <p className="text-[11px] text-[var(--text-muted)] mt-1.5 font-mono">
-          Wallet: {formatAmount(wallet)}
-        </p>
-      </div>
-    </div>
-  );
 }
 
 export function PoolBalances() {
@@ -187,170 +169,136 @@ export function PoolBalances() {
   if (!isConnected) return null;
 
   return (
-    <div className="card rounded-2xl overflow-hidden glow-accent">
-      <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border-subtle)]">
-        <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border-subtle)] flex items-center justify-center">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-violet-400">
-              <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" />
-              <path d="M3 5v14a2 2 0 0 0 2 2h16v-5" />
-              <path d="M18 12a2 2 0 0 0 0 4h4v-4Z" />
-            </svg>
-          </div>
-          <h2 className="text-[14px] font-semibold text-[var(--text-primary)]">Vault</h2>
-        </div>
-        <motion.button
+    <div className="card overflow-hidden">
+      {/* Header */}
+      <div className="flex items-center justify-between px-6 py-5 border-b border-[var(--border-subtle)]">
+        <h2 className="text-[15px] font-semibold text-[var(--text-primary)]">Vault</h2>
+        <button
           onClick={loadBalances}
-          whileHover={{ rotate: 180 }}
-          transition={{ duration: 0.3 }}
-          className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[var(--bg-elevated)] text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors"
+          className="text-[12px] text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors cursor-pointer"
         >
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-            <path d="M3 3v5h5" />
-            <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
-            <path d="M16 21h5v-5" />
-          </svg>
-        </motion.button>
+          Refresh
+        </button>
       </div>
 
-      <div className="p-5 space-y-4">
+      <div className="p-6 space-y-5">
+        {/* Balance Cards */}
         <div className="grid grid-cols-2 gap-3">
-          <BalanceCard
-            label="BTC"
-            icon={
-              <div className="w-5 h-5 rounded-full bg-orange-500/15 flex items-center justify-center">
-                <span className="text-[10px] font-bold text-orange-400">B</span>
-              </div>
-            }
-            pool={btcBalance}
-            wallet={btcWallet}
-          />
-          <BalanceCard
-            label="USDC"
-            icon={
-              <div className="w-5 h-5 rounded-full bg-blue-500/15 flex items-center justify-center">
-                <span className="text-[10px] font-bold text-blue-400">U</span>
-              </div>
-            }
-            pool={usdcBalance}
-            wallet={usdcWallet}
-          />
+          <div className="bg-[var(--bg-primary)] rounded-xl p-4 border border-[var(--border-subtle)]">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-6 h-6 rounded-full bg-orange-500/10 flex items-center justify-center text-[10px] font-bold text-orange-400">B</span>
+              <span className="text-[12px] font-medium text-[var(--text-muted)]">BTC</span>
+            </div>
+            <p className="font-mono text-[17px] font-semibold text-[var(--text-primary)]">{formatAmount(btcBalance)}</p>
+            <p className="text-[11px] text-[var(--text-muted)] mt-1 font-mono">Wallet: {formatAmount(btcWallet)}</p>
+          </div>
+          <div className="bg-[var(--bg-primary)] rounded-xl p-4 border border-[var(--border-subtle)]">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-6 h-6 rounded-full bg-blue-500/10 flex items-center justify-center text-[10px] font-bold text-blue-400">U</span>
+              <span className="text-[12px] font-medium text-[var(--text-muted)]">USDC</span>
+            </div>
+            <p className="font-mono text-[17px] font-semibold text-[var(--text-primary)]">{formatAmount(usdcBalance)}</p>
+            <p className="text-[11px] text-[var(--text-muted)] mt-1 font-mono">Wallet: {formatAmount(usdcWallet)}</p>
+          </div>
         </div>
 
+        {/* Token Selector */}
         <div className="flex items-center gap-2">
           {(["BTC", "USDC"] as const).map((t) => (
             <button
               key={t}
               onClick={() => setActiveToken(t)}
-              className={`px-3.5 py-1.5 text-[11px] font-semibold rounded-lg transition-all duration-200 ${
+              className={`px-4 py-2 text-[12px] font-medium rounded-lg transition-all cursor-pointer ${
                 activeToken === t
-                  ? "bg-[var(--accent)]/15 text-[var(--accent)] border border-[var(--accent)]/25"
-                  : "bg-[var(--bg-elevated)] text-[var(--text-muted)] border border-[var(--border-subtle)] hover:text-[var(--text-secondary)]"
+                  ? "bg-[var(--accent-light)] text-[var(--accent)] border border-[var(--accent)]/20"
+                  : "text-[var(--text-muted)] border border-[var(--border-subtle)] hover:text-[var(--text-secondary)]"
               }`}
             >
               {t}
             </button>
           ))}
-          <div className="flex-1" />
-          <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider">Active Token</span>
         </div>
 
+        {/* Tab Switch */}
         <div className="flex border-b border-[var(--border-subtle)]">
           {(["deposit", "withdraw"] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`flex-1 pb-2.5 text-[12px] font-medium capitalize transition-colors relative ${
+              className={`flex-1 pb-3 text-[13px] font-medium capitalize transition-colors relative cursor-pointer ${
                 activeTab === tab ? "text-[var(--text-primary)]" : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
               }`}
             >
               {tab}
               {activeTab === tab && (
-                <motion.div
-                  layoutId="vault-tab"
-                  className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--accent)]"
-                  transition={{ type: "spring", stiffness: 500, damping: 35 }}
-                />
+                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--accent)]" />
               )}
             </button>
           ))}
         </div>
 
+        {/* Deposit / Withdraw */}
         {activeTab === "deposit" ? (
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <input
               type="text"
               inputMode="decimal"
               value={depositAmount}
               onChange={(e) => setDepositAmount(e.target.value)}
               placeholder={`${activeToken} amount`}
-              className="flex-1 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] focus:border-[var(--border-default)] rounded-xl px-4 py-2.5 text-[14px] text-[var(--text-primary)] placeholder:text-[var(--text-muted)]/40 focus:outline-none font-mono transition-colors"
+              className="flex-1 input-field rounded-xl px-4 py-3 text-[14px] font-mono"
             />
-            <motion.button
+            <button
               onClick={handleDeposit}
               disabled={isDepositing || !depositAmount}
-              whileHover={{ scale: isDepositing ? 1 : 1.02 }}
-              whileTap={{ scale: isDepositing ? 1 : 0.97 }}
-              className="px-5 py-2.5 text-[13px] font-semibold bg-gradient-to-b from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 disabled:from-emerald-800/40 disabled:to-emerald-900/40 text-white disabled:text-emerald-300/30 rounded-xl shadow-lg shadow-emerald-500/10 transition-all disabled:cursor-not-allowed"
+              className="px-6 py-3 text-[13px] font-semibold bg-emerald-500 hover:bg-emerald-400 text-white rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
             >
               {isDepositing ? (
                 <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
                   <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeDasharray="60" strokeLinecap="round" />
                 </svg>
               ) : "Deposit"}
-            </motion.button>
+            </button>
           </div>
         ) : (
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <input
               type="text"
               inputMode="decimal"
               value={withdrawAmount}
               onChange={(e) => setWithdrawAmount(e.target.value)}
               placeholder={`${activeToken} amount`}
-              className="flex-1 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] focus:border-[var(--border-default)] rounded-xl px-4 py-2.5 text-[14px] text-[var(--text-primary)] placeholder:text-[var(--text-muted)]/40 focus:outline-none font-mono transition-colors"
+              className="flex-1 input-field rounded-xl px-4 py-3 text-[14px] font-mono"
             />
-            <motion.button
+            <button
               onClick={handleWithdraw}
               disabled={isWithdrawing || !withdrawAmount}
-              whileHover={{ scale: isWithdrawing ? 1 : 1.02 }}
-              whileTap={{ scale: isWithdrawing ? 1 : 0.97 }}
-              className="px-5 py-2.5 text-[13px] font-semibold bg-[var(--bg-elevated)] hover:bg-[var(--bg-elevated)]/80 border border-[var(--border-subtle)] hover:border-[var(--border-default)] text-[var(--text-secondary)] rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+              className="px-6 py-3 text-[13px] font-semibold border border-[var(--border-default)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-active)] rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
             >
               {isWithdrawing ? (
                 <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
                   <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeDasharray="60" strokeLinecap="round" />
                 </svg>
               ) : "Withdraw"}
-            </motion.button>
+            </button>
           </div>
         )}
 
-        <motion.button
+        {/* Mint Button */}
+        <button
           onClick={handleMintTestTokens}
           disabled={isMinting}
-          whileHover={{ scale: isMinting ? 1 : 1.01 }}
-          whileTap={{ scale: isMinting ? 1 : 0.98 }}
-          className="w-full py-2.5 text-[12px] font-medium bg-transparent hover:bg-[var(--bg-elevated)] border border-dashed border-[var(--border-subtle)] hover:border-[var(--border-default)] text-[var(--text-muted)] hover:text-[var(--text-secondary)] rounded-xl transition-all"
+          className="w-full py-3 text-[13px] font-medium border border-dashed border-[var(--border-default)] text-[var(--text-muted)] hover:text-[var(--accent)] hover:border-[var(--accent)]/30 rounded-xl transition-all cursor-pointer"
         >
           {isMinting ? (
             <span className="flex items-center justify-center gap-2">
-              <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none">
+              <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
                 <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeDasharray="60" strokeLinecap="round" />
               </svg>
               Minting...
             </span>
-          ) : (
-            <span className="flex items-center justify-center gap-1.5">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="10" />
-                <path d="M12 8v8M8 12h8" />
-              </svg>
-              Mint 1,000 Test BTC + USDC
-            </span>
-          )}
-        </motion.button>
+          ) : "Mint 1,000 Test BTC + USDC"}
+        </button>
       </div>
     </div>
   );

@@ -1,22 +1,25 @@
 @import "tailwindcss";
 
 :root {
-  --bg-primary: #06080c;
-  --bg-secondary: #0c1018;
-  --bg-card: #111620;
-  --bg-elevated: #171e2c;
-  --border-subtle: #1c2436;
-  --border-default: #253044;
-  --text-primary: #e8edf5;
-  --text-secondary: #8b95a8;
-  --text-muted: #4f596e;
-  --accent: #3b82f6;
-  --accent-hover: #2563eb;
-  --buy: #22c55e;
-  --buy-muted: #166534;
-  --sell: #ef4444;
-  --sell-muted: #991b1b;
-  --warning: #f59e0b;
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #111111;
+  --bg-card: #161616;
+  --bg-elevated: #1c1c1c;
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.1);
+  --border-active: rgba(255, 255, 255, 0.18);
+  --text-primary: #f5f5f5;
+  --text-secondary: #a3a3a3;
+  --text-muted: #525252;
+  --accent: #d4a574;
+  --accent-hover: #c4956a;
+  --accent-light: rgba(212, 165, 116, 0.12);
+  --buy: #4ade80;
+  --buy-muted: rgba(74, 222, 128, 0.1);
+  --sell: #f87171;
+  --sell-muted: rgba(248, 113, 113, 0.1);
+  --success: #4ade80;
+  --warning: #fbbf24;
 }
 
 @theme inline {
@@ -28,49 +31,60 @@
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--border-default) transparent;
+  scrollbar-color: rgba(255,255,255,0.08) transparent;
 }
 
 body {
   background: var(--bg-primary);
   color: var(--text-primary);
   font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.glow-buy {
-  box-shadow: 0 0 20px rgba(34, 197, 94, 0.08), 0 0 60px rgba(34, 197, 94, 0.03);
-}
-.glow-sell {
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.08), 0 0 60px rgba(239, 68, 68, 0.03);
-}
-.glow-accent {
-  box-shadow: 0 0 20px rgba(59, 130, 246, 0.1), 0 0 60px rgba(59, 130, 246, 0.04);
-}
-
-.noise::before {
-  content: "";
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.02'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
-}
-
-.mesh-gradient {
-  background:
-    radial-gradient(ellipse 80% 50% at 20% 40%, rgba(59, 130, 246, 0.04), transparent),
-    radial-gradient(ellipse 60% 80% at 80% 20%, rgba(34, 197, 94, 0.03), transparent),
-    radial-gradient(ellipse 50% 60% at 50% 80%, rgba(139, 92, 246, 0.02), transparent);
+::selection {
+  background: var(--accent);
+  color: #0a0a0a;
 }
 
 .card {
-  background: linear-gradient(135deg, rgba(17, 22, 32, 0.95), rgba(12, 16, 24, 0.98));
+  background: var(--bg-card);
   border: 1px solid var(--border-subtle);
-  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  transition: border-color 0.2s ease;
 }
 
-.dot-grid {
-  background-image: radial-gradient(circle, rgba(59, 130, 246, 0.06) 1px, transparent 1px);
-  background-size: 32px 32px;
+.card:hover {
+  border-color: var(--border-default);
 }
+
+.input-field {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+
+.input-field:focus {
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+.input-field::placeholder {
+  color: var(--text-muted);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.fade-in-delay-1 { animation-delay: 0.1s; opacity: 0; }
+.fade-in-delay-2 { animation-delay: 0.2s; opacity: 0; }
+.fade-in-delay-3 { animation-delay: 0.3s; opacity: 0; }
 
