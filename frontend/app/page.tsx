@@ -5,6 +5,7 @@ import { WalletBar } from "@/components/WalletBar";
 import { OrderForm } from "@/components/OrderForm";
 import { OrderBook } from "@/components/OrderBook";
 import { PoolBalances } from "@/components/PoolBalances";
+import { GuideModal } from "@/components/GuideModal";
 import { useAccount } from "@starknet-react/core";
 
 const fadeUp = {
@@ -139,6 +140,8 @@ export default function Home() {
           </motion.div>
         </div>
       </main>
+
+      <GuideModal />
 
       <footer className="mt-auto border-t border-[var(--border-subtle)]">
         <div className="max-w-[1440px] mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
