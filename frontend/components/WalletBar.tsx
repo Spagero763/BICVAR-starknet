@@ -38,12 +38,12 @@ function WalletNotFoundModal({ walletKey, onClose }: { walletKey: string | null;
   const wallet = walletKey === "braavos" ? WALLET_INFO.braavos : WALLET_INFO.argentX;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ height: '100dvh' }}>
       <div className="absolute inset-0 bg-black/80 glass backdrop-in" onClick={onClose} />
 
-      <div className="relative w-full sm:max-w-sm max-h-[85vh] border border-[var(--border-default)] bg-[var(--bg-card)] shadow-2xl shadow-black/60 modal-in overflow-y-auto rounded-t-lg sm:rounded-t-none">
+      <div className="relative w-full max-w-sm border border-[var(--border-default)] bg-[var(--bg-card)] shadow-2xl shadow-black/60 modal-in overflow-y-auto" style={{ maxHeight: '80dvh' }}>
         {/* Header */}
-        <div className="sticky top-0 z-10 flex items-center justify-between px-4 sm:px-5 py-3 border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)]">
+        <div className="sticky top-0 z-10 flex items-center justify-between px-4 py-3 border-b border-[var(--border-subtle)] bg-[var(--bg-secondary)]">
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 bg-[var(--warning)]" />
             <p className="text-[10px] font-mono font-bold text-[var(--text-primary)] tracking-[0.15em] uppercase">Wallet Not Detected</p>
@@ -60,7 +60,7 @@ function WalletNotFoundModal({ walletKey, onClose }: { walletKey: string | null;
         </div>
 
         {/* Body */}
-        <div className="px-4 sm:px-5 py-4 sm:py-5 space-y-3 sm:space-y-4">
+        <div className="px-4 py-4 space-y-3">
           <p className="text-[11px] font-mono text-[var(--text-secondary)] leading-relaxed">
             <span className="font-bold" style={{ color: wallet.color }}>{wallet.name}</span> wallet was not found{isMobile ? " on your device" : " in your browser"}. Install it to connect to BICVAR.
           </p>
@@ -140,37 +140,38 @@ function WalletNotFoundModal({ walletKey, onClose }: { walletKey: string | null;
             </>
           )}
 
-          {/* Switch prompt */}
+          {/* Alt platform links */}
           <div className="border-t border-[var(--border-subtle)] pt-3">
             <p className="text-[9px] font-mono text-[var(--text-muted)] tracking-wider leading-relaxed text-center">
               {isMobile
                 ? "Using a desktop? Install the browser extension instead."
                 : "On mobile? Download the wallet app from App Store or Google Play."}
             </p>
-            {!isMobile && (
-              <div className="flex gap-2 mt-2">
-                <a href={wallet.ios} target="_blank" rel="noopener noreferrer"
-                  className="flex-1 text-center px-2 py-1.5 text-[9px] font-mono text-[var(--text-muted)] hover:text-[var(--text-secondary)] border border-[var(--border-subtle)] transition-all cursor-pointer tracking-wider uppercase">
-                  iOS App
-                </a>
-                <a href={wallet.android} target="_blank" rel="noopener noreferrer"
-                  className="flex-1 text-center px-2 py-1.5 text-[9px] font-mono text-[var(--text-muted)] hover:text-[var(--text-secondary)] border border-[var(--border-subtle)] transition-all cursor-pointer tracking-wider uppercase">
-                  Android App
-                </a>
-              </div>
-            )}
-            {isMobile && (
-              <div className="flex gap-2 mt-2">
-                <a href={wallet.chrome} target="_blank" rel="noopener noreferrer"
-                  className="flex-1 text-center px-2 py-1.5 text-[9px] font-mono text-[var(--text-muted)] hover:text-[var(--text-secondary)] border border-[var(--border-subtle)] transition-all cursor-pointer tracking-wider uppercase">
-                  Chrome
-                </a>
-                <a href={wallet.firefox} target="_blank" rel="noopener noreferrer"
-                  className="flex-1 text-center px-2 py-1.5 text-[9px] font-mono text-[var(--text-muted)] hover:text-[var(--text-secondary)] border border-[var(--border-subtle)] transition-all cursor-pointer tracking-wider uppercase">
-                  Firefox
-                </a>
-              </div>
-            )}
+            <div className="flex gap-2 mt-2">
+              {isMobile ? (
+                <>
+                  <a href={wallet.chrome} target="_blank" rel="noopener noreferrer"
+                    className="flex-1 text-center px-2 py-1.5 text-[9px] font-mono text-[var(--text-muted)] hover:text-[var(--text-secondary)] border border-[var(--border-subtle)] transition-all cursor-pointer tracking-wider uppercase">
+                    Chrome
+                  </a>
+                  <a href={wallet.firefox} target="_blank" rel="noopener noreferrer"
+                    className="flex-1 text-center px-2 py-1.5 text-[9px] font-mono text-[var(--text-muted)] hover:text-[var(--text-secondary)] border border-[var(--border-subtle)] transition-all cursor-pointer tracking-wider uppercase">
+                    Firefox
+                  </a>
+                </>
+              ) : (
+                <>
+                  <a href={wallet.ios} target="_blank" rel="noopener noreferrer"
+                    className="flex-1 text-center px-2 py-1.5 text-[9px] font-mono text-[var(--text-muted)] hover:text-[var(--text-secondary)] border border-[var(--border-subtle)] transition-all cursor-pointer tracking-wider uppercase">
+                    iOS App
+                  </a>
+                  <a href={wallet.android} target="_blank" rel="noopener noreferrer"
+                    className="flex-1 text-center px-2 py-1.5 text-[9px] font-mono text-[var(--text-muted)] hover:text-[var(--text-secondary)] border border-[var(--border-subtle)] transition-all cursor-pointer tracking-wider uppercase">
+                    Android App
+                  </a>
+                </>
+              )}
+            </div>
           </div>
 
           {/* After install note */}
