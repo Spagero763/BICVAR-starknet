@@ -31,6 +31,7 @@ export function PoolBalances() {
   const [isDepositing, setIsDepositing] = useState(false);
   const [isWithdrawing, setIsWithdrawing] = useState(false);
   const [isMinting, setIsMinting] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState<"deposit" | "withdraw">("deposit");
 
   const { sendAsync } = useSendTransaction({});
@@ -174,10 +175,22 @@ export function PoolBalances() {
       <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--border-subtle)]">
         <p className="text-[9px] font-mono text-[var(--text-muted)] tracking-[0.2em] uppercase">// Vault</p>
         <button
-          onClick={loadBalances}
-          className="text-[9px] font-mono text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors cursor-pointer tracking-wider uppercase"
+          onClick={async () => {
+            setIsRefreshing(true);
+            await loadBalances();
+            setIsRefreshing(false);
+          }}
+          disabled={isRefreshing}
+          className="text-[9px] font-mono text-[var(--text-secondary)] hover:text-[var(--accent)] transition-colors cursor-pointer tracking-wider uppercase disabled:opacity-40"
         >
-          Refresh
+          {isRefreshing ? (
+            <span className="flex items-center gap-1.5">
+              <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeDasharray="60" strokeLinecap="round" />
+              </svg>
+              Syncing...
+            </span>
+          ) : "Refresh"}
         </button>
       </div>
 
